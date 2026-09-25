@@ -1,33 +1,29 @@
-طريقة النشر على Hostinger:
+طريقة نشر النسخة الجديدة على GitHub Pages
 
-1. ادخل إلى Hostinger ثم File Manager.
-2. افتح مجلد public_html الخاص بالدومين rj006.com.
-3. ارفع كل محتويات مجلد "موقع العيلة" إلى public_html، وليس ملفات HTML فقط.
-4. الصفحة الرئيسية هي:
-   https://rj006.com/
-5. صفحة الإدارة الجديدة هي:
-   https://rj006.com/adminhamada
-   أو:
-   https://rj006.com/adminhamada.html
-6. لا تعتمد على اسم الإدارة القديم index (2).html.
-7. تأكد أن هذه الملفات مرفوعة مع الصفحات:
-   .htaccess
-   _headers
-   sw.js
-   vercel.json
-   manifest.webmanifest
-   offline.html
-   pwa-icon-192.png
-   pwa-icon-512.png
-   pwa-maskable-512.png
-8. بعد أي تعديل جديد، غير قيمة APP_VERSION داخل صفحات HTML وداخل sw.js.
-9. أول مرة بعد رفع هذه النسخة افتح الرابط بهذا الشكل لكسر الكاش القديم:
-   https://rj006.com/?v=2026.08.21.1
-   https://rj006.com/adminhamada?v=2026.08.21.1
-10. Hostinger يعمل غالباً على Apache، لذلك ملف .htaccess هو الأهم لمنع تخزين النسخة القديمة.
-11. في Google Apps Script يجب عمل Deploy جديد بعد تعديل Code.gs، حفظ الكود وحده لا يكفي.
-12. Google Sheet يتم إنشاؤه تلقائياً إذا لم يكن موجوداً عند أول طلب للخادم بعد نشر Code.gs.
-13. من صفحة الإدارة يمكن الضغط على "إنشاء/تهيئة Google Sheet والبحث السريع" للتأكد من إنشاء الشيت وتجهيز أعمدة الهوية.
-14. الموقع أصبح PWA، ويمكن تثبيته من زر "تثبيت التطبيق" على Android أو من خيار "إضافة إلى الشاشة الرئيسية" في Safari على iPhone.
-15. الرابط الذي يرسل للمستخدمين بعد هذا التحديث:
-   https://rj006.com/?v=2026.08.21.1
+الرابط الرسمي الجديد:
+https://rj0060.github.io/r/
+
+رابط لوحة الإدارة:
+https://rj0060.github.io/r/adminhamada.html
+
+خطوات التحديث:
+1. ارفع جميع ملفات هذا المجلد إلى مستودع GitHub المسمى r، في الفرع الذي تستخدمه GitHub Pages.
+2. من Settings ثم Pages تأكد أن النشر مفعل من المجلد الجذري للفرع الصحيح.
+3. انتظر اكتمال نشر GitHub Pages ثم افتح الرابط الرسمي أعلاه.
+4. لكسر كاش النسخة القديمة أول مرة، افتح:
+   https://rj0060.github.io/r/?v=2026.09.25.1
+5. افتح لوحة الإدارة من:
+   https://rj0060.github.io/r/adminhamada.html?v=2026.09.25.1
+
+مهم جداً لتشغيل إضافة عائلة جديدة:
+6. انسخ محتوى Code.gs إلى مشروع Google Apps Script المرتبط بالنظام.
+7. احفظ المشروع، ثم اختر Deploy > Manage deployments > Edit > New version > Deploy.
+8. تأكد أن رابط Web App الناتج هو نفسه الموجود في SCRIPT_URL داخل index.html وadminhamada.html.
+9. من Script Properties اضبط ADMIN_PASSWORD على كلمة مرور قوية خاصة بالإدارة.
+10. من لوحة الإدارة اضغط «إنشاء/تهيئة Google Sheet والبحث السريع» مرة واحدة بعد نشر الخادم.
+
+ملاحظات:
+- إعدادات manifest وService Worker مضبوطة للعمل داخل المسار /r/ في GitHub Pages.
+- رابط لوحة الإدارة يجب أن ينتهي بـ adminhamada.html لأن GitHub Pages لا يستخدم قواعد .htaccess.
+- الموقع قابل للتثبيت على Android، وعلى iPhone من خيار «إضافة إلى الشاشة الرئيسية».
+- عند أي تحديث مستقبلي غيّر APP_VERSION في الصفحات وCode.gs وsw.js وملف manifest معاً.

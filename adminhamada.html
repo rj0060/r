@@ -6,16 +6,16 @@
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="app-version" content="2026.08.21.1">
+    <meta name="app-version" content="2026.09.25.1">
     <meta name="theme-color" content="#4a154b">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="إدارة أبو رجيلة">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>لوحة تحكم الإدارة المركزية | عائلة أبو رجيلة</title>
-    <link rel="manifest" href="manifest.webmanifest?v=2026.08.21.1">
-    <link rel="icon" type="image/png" sizes="192x192" href="pwa-icon-192.png?v=2026.08.21.1">
-    <link rel="apple-touch-icon" href="pwa-icon-192.png?v=2026.08.21.1">
+    <link rel="manifest" href="manifest.webmanifest?v=2026.09.25.1">
+    <link rel="icon" type="image/png" sizes="192x192" href="pwa-icon-192.png?v=2026.09.25.1">
+    <link rel="apple-touch-icon" href="pwa-icon-192.png?v=2026.09.25.1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
@@ -33,7 +33,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
-        body { background-color: var(--bg-cream); color: var(--dark-gray); padding-bottom: 20px; min-height: 100vh; display: flex; flex-direction: column; }
+        body { background: radial-gradient(circle at 10% 0%, #f3e9f4 0, transparent 28rem), var(--bg-cream); color: var(--dark-gray); padding-bottom: 20px; min-height: 100vh; display: flex; flex-direction: column; }
 
         /* شاشة تسجيل الدخول الاحترافية البديلة للـ Prompt */
         #adminLockScreen {
@@ -63,19 +63,21 @@
         }
 
         /* بقية تنسيقات اللوحة */
-        header { background: linear-gradient(135deg, var(--admin-purple), #2d0b2e); color: white; padding: 25px 20px; text-align: center; border-bottom: 5px solid var(--royal-gold); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        header { position: relative; overflow: hidden; background: linear-gradient(135deg, #5d1b60, #2d0b2e); color: white; padding: 34px 20px; text-align: center; border-bottom: 5px solid var(--royal-gold); box-shadow: 0 8px 30px rgba(45,11,46,.2); }
+        header::after { content:""; position:absolute; inset:auto -8% -85px; height:130px; background:rgba(255,255,255,.05); border-radius:50%; }
         header h1 { font-family: 'Amiri', serif; font-size: 2.2rem; color: var(--royal-gold); margin-bottom: 5px; }
         header p { font-size: 0.95rem; opacity: 0.9; }
 
-        .container { max-width: 850px; margin: 25px auto; padding: 0 20px; flex: 1; }
-        .card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid rgba(74, 21, 75, 0.2); margin-bottom: 25px; }
+        .container { width: 100%; max-width: 1040px; margin: 25px auto; padding: 0 20px; flex: 1; }
+        .card { background: rgba(255,255,255,.96); border-radius: 18px; padding: 25px; box-shadow: 0 12px 34px rgba(45,11,46,.07); border: 1px solid rgba(74,21,75,.12); margin-bottom: 25px; }
         .card-title { font-family: 'Amiri', serif; font-size: 1.6rem; color: var(--admin-purple); border-bottom: 2px solid var(--royal-gold); padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
 
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
         @media (max-width: 650px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 450px) { .stats-grid { grid-template-columns: 1fr; } }
         
-        .stat-box { padding: 15px; border-radius: 10px; text-align: center; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .stat-box { padding: 18px 12px; border-radius: 14px; text-align: center; color: white; box-shadow: 0 10px 20px rgba(0,0,0,.1); transition: transform .2s ease; }
+        .stat-box:hover { transform: translateY(-3px); }
         .stat-box.color1 { background: linear-gradient(135deg, #4a154b, #632064); border-bottom: 4px solid var(--royal-gold); }
         .stat-box.color2 { background: linear-gradient(135deg, #1f4068, #162447); border-bottom: 4px solid #00b4d8; }
         .stat-box.color3 { background: linear-gradient(135deg, #7b2cbf, #5a189a); border-bottom: 4px solid #e0aaff; }
@@ -85,15 +87,15 @@
 
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.95rem; color: var(--admin-purple); }
-        .form-control { width: 100%; padding: 11px; border: 1px solid #cccccc; border-radius: 8px; font-size: 1rem; transition: all 0.3s; background-color: #fcfcfc; }
+        .form-control { width: 100%; padding: 12px 13px; border: 1px solid #d7ced8; border-radius: 10px; font-size: 1rem; transition: border-color .2s, box-shadow .2s, background .2s; background-color: #fff; }
         .form-control:focus { border-color: var(--royal-gold); outline: none; box-shadow: 0 0 8px rgba(197, 160, 89, 0.2); }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
 
-        .btn { display: inline-block; width: 100%; padding: 13px; background-color: var(--admin-purple); color: white; border: none; border-radius: 8px; font-size: 1.05rem; font-weight: bold; cursor: pointer; transition: background 0.3s; text-align: center; }
+        .btn { display: inline-block; width: 100%; padding: 13px; background: linear-gradient(135deg, #5d1b60, var(--admin-purple)); color: white; border: none; border-radius: 10px; font-size: 1.05rem; font-weight: bold; cursor: pointer; transition: transform .2s, box-shadow .2s, background .2s; text-align: center; box-shadow: 0 7px 16px rgba(74,21,75,.15); }
         .btn:disabled { opacity: 0.65; cursor: wait; }
-        .btn:hover { background-color: #350d36; }
+        .btn:hover { background-color: #350d36; transform: translateY(-1px); box-shadow: 0 10px 20px rgba(74,21,75,.2); }
         .btn-gold { background-color: var(--royal-gold); color: #222; }
         .btn-gold:hover { background-color: #b38f4b; color: white; }
         .btn-blue { background-color: var(--edit-blue); color: white; margin-top: 10px; }
@@ -119,6 +121,12 @@
         .admin-actions { display: grid; gap: 10px; margin-bottom: 25px; }
         .admin-search-row { display: flex; gap: 10px; }
         .admin-search-row .btn { flex: 0 0 130px; width: 130px; }
+        .new-family-card { background: linear-gradient(145deg, #fffaf0, #fff); border: 1px solid rgba(197,160,89,.45); border-radius: 16px; padding: 18px; margin-bottom: 25px; box-shadow: 0 10px 28px rgba(89,66,20,.07); }
+        .new-family-heading { width: 100%; display:flex; align-items:center; justify-content:space-between; gap:12px; border:0; background:transparent; color:var(--admin-purple); font:inherit; font-weight:700; font-size:1.05rem; cursor:pointer; text-align:right; }
+        .new-family-heading span { display:flex; align-items:center; gap:10px; }
+        .new-family-heading .plus-badge { width:38px; height:38px; display:inline-flex; align-items:center; justify-content:center; background:var(--royal-gold); color:#2d0b2e; border-radius:12px; }
+        .new-family-form { margin-top:18px; padding-top:18px; border-top:1px dashed #d5bd8d; }
+        .form-note { color:#6b5d45; font-size:.85rem; margin:0 0 16px; line-height:1.7; }
 
         @media (max-width: 520px) {
             body { padding-bottom: env(safe-area-inset-bottom); }
@@ -147,6 +155,8 @@
             .btn-edit-child { width: 100%; justify-content: center; background: #edf4f9; border-radius: 8px; padding: 10px; }
             .modal-box { width: calc(100% - 28px); padding: 24px 18px; border-radius: 10px; }
             #dynamicDashboardSection { padding: 14px 10px !important; border-radius: 8px !important; }
+            .new-family-card { padding:14px 12px; border-radius:12px; }
+            .new-family-heading { font-size:.95rem; }
         }
 
         @media (max-width: 360px) {
@@ -216,6 +226,38 @@
                 <button class="btn" style="background-color: var(--edit-blue);" onclick="handleAdminSearch()">استعلام وبحث</button>
             </div>
         </div>
+
+        <section class="new-family-card" aria-labelledby="newFamilyTitle">
+            <button class="new-family-heading" type="button" onclick="toggleDiv('newFamilyForm')" aria-controls="newFamilyForm">
+                <span id="newFamilyTitle"><i class="fa-solid fa-house-circle-check plus-badge"></i> إضافة عائلة جديدة إلى السجل المركزي</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div id="newFamilyForm" class="new-family-form hidden">
+                <p class="form-note">الحقول المعلّمة بنجمة مطلوبة. بعد الحفظ تُفتح العائلة مباشرة للتعديل وإضافة الأبناء.</p>
+                <div class="grid-2">
+                    <div class="form-group"><label for="nf_id">رقم هوية رب الأسرة *</label><input type="text" id="nf_id" class="form-control" inputmode="numeric" pattern="[0-9]*" maxlength="9" autocomplete="off" placeholder="9 أرقام"></div>
+                    <div class="form-group"><label for="nf_name">اسم رب الأسرة بالكامل *</label><input type="text" id="nf_name" class="form-control" autocomplete="name" placeholder="الاسم الرباعي"></div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label for="nf_birth">تاريخ الميلاد *</label><input type="date" id="nf_birth" class="form-control"></div>
+                    <div class="form-group"><label for="nf_status">الحالة الاجتماعية</label><select id="nf_status" class="form-control"><option value="">-- اختر --</option><option>متزوج</option><option>أرمل</option><option>مطلق</option><option>أعزب</option></select></div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label for="nf_displacement">مكان النزوح الحالي</label><input type="text" id="nf_displacement" class="form-control" placeholder="المنطقة أو العنوان الحالي"></div>
+                    <div class="form-group"><label for="nf_count">عدد أفراد الأسرة</label><input type="number" id="nf_count" class="form-control" inputmode="numeric" min="1" max="99" placeholder="مثال: 6"></div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label for="nf_phone">رقم الجوال الأساسي</label><input type="tel" id="nf_phone" class="form-control" inputmode="tel" autocomplete="tel"></div>
+                    <div class="form-group"><label for="nf_altPhone">رقم جوال بديل</label><input type="tel" id="nf_altPhone" class="form-control" inputmode="tel"></div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label for="nf_wifeName">اسم الزوجة بالكامل</label><input type="text" id="nf_wifeName" class="form-control"></div>
+                    <div class="form-group"><label for="nf_wifeId">رقم هوية الزوجة</label><input type="text" id="nf_wifeId" class="form-control" inputmode="numeric" pattern="[0-9]*" maxlength="9" autocomplete="off"></div>
+                </div>
+                <div class="form-group"><label for="nf_wifeBirth">تاريخ ميلاد الزوجة</label><input type="date" id="nf_wifeBirth" class="form-control"></div>
+                <button class="btn btn-gold" type="button" onclick="submitNewFamily()"><i class="fa-solid fa-floppy-disk"></i> حفظ وإنشاء العائلة الجديدة</button>
+            </div>
+        </section>
 
         <div id="dynamicDashboardSection" class="hidden" style="background: white; border: 2px solid var(--royal-gold); border-radius: 12px; padding: 20px;">
             
@@ -336,7 +378,7 @@
 
 <script>
     // ⚠️ اكتب رابط تطبيق الويب الخاص بك (Web App URL) المأخوذ من Google Apps Script هنا ⚠️
-    const APP_VERSION = "2026.08.21.1";
+    const APP_VERSION = "2026.09.25.1";
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDb1SZSxen9pRPNwWu0Ac8CXqIAhot5_eJ2FBf1MtI6fHCK-ysEMaJkpoPO1AypdqQ/exec"; 
     
     let ADMIN_TOKEN = "";
@@ -348,7 +390,7 @@
 
     function postApi(payload) {
         const requestPayload = Object.assign({ clientVersion: APP_VERSION }, payload);
-        const adminActions = ["getAdminStats", "adminSearch", "exportData", "updateParent", "addChild", "updateChild", "prepareSheetsForSpeed", "setupSpreadsheet"];
+        const adminActions = ["getAdminStats", "adminSearch", "addFamily", "exportData", "updateParent", "addChild", "updateChild", "prepareSheetsForSpeed", "setupSpreadsheet"];
         const apiUrl = `${SCRIPT_URL}?v=${encodeURIComponent(APP_VERSION)}&t=${Date.now()}`;
 
         if (ADMIN_TOKEN && adminActions.includes(requestPayload.action) && !requestPayload.adminToken) {
@@ -537,6 +579,63 @@
         } finally {
             if (!silent) showProcessingModal(false);
             if (!silent) setRequestRunning(false);
+        }
+    }
+
+    async function submitNewFamily() {
+        const nationalId = normalizeIdInput(document.getElementById('nf_id').value);
+        const fullName = document.getElementById('nf_name').value.trim();
+        const birthDate = document.getElementById('nf_birth').value;
+        const wifeId = normalizeIdInput(document.getElementById('nf_wifeId').value);
+
+        document.getElementById('nf_id').value = nationalId;
+        document.getElementById('nf_wifeId').value = wifeId;
+
+        if (!isValidId(nationalId) || fullName.length < 3 || !birthDate) {
+            alert("يرجى إدخال رقم هوية صحيح، اسم رب الأسرة بالكامل، وتاريخ الميلاد.");
+            return;
+        }
+
+        if (wifeId && !isValidId(wifeId)) {
+            alert("رقم هوية الزوجة يجب أن يتكون من 9 أرقام أو يُترك فارغاً.");
+            return;
+        }
+
+        const familyData = {
+            nationalId,
+            fullName,
+            birthDate,
+            status: document.getElementById('nf_status').value,
+            displacement: document.getElementById('nf_displacement').value.trim(),
+            familyCount: document.getElementById('nf_count').value,
+            phone: document.getElementById('nf_phone').value.trim(),
+            altPhone: document.getElementById('nf_altPhone').value.trim(),
+            wifeName: document.getElementById('nf_wifeName').value.trim(),
+            wifeId,
+            wifeBirth: document.getElementById('nf_wifeBirth').value
+        };
+
+        if (IS_REQUEST_RUNNING) return;
+        setRequestRunning(true);
+        showProcessingModal(true, "جاري إنشاء سجل العائلة الجديدة والتحقق من عدم تكرار الهوية...");
+
+        try {
+            await postApi({ action: "addFamily", familyData });
+            RAW_PARENTS_EXCEL = [];
+            document.getElementById('adminSearchInput').value = nationalId;
+            document.querySelectorAll('#newFamilyForm input, #newFamilyForm select').forEach((field) => field.value = "");
+            document.getElementById('newFamilyForm').classList.add('hidden');
+
+            const response = await postApi({ action: "adminSearch", searchId: nationalId });
+            setupDashboard(response, nationalId);
+            await fetchAdminStats(true);
+            document.getElementById('dynamicDashboardSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            alert("تم إنشاء العائلة بنجاح. يمكنك الآن استكمال بياناتها وإضافة الأبناء.");
+        } catch (error) {
+            alert(error.message || "تعذر إنشاء سجل العائلة الجديدة.");
+        } finally {
+            showProcessingModal(false);
+            setRequestRunning(false);
         }
     }
 
@@ -875,6 +974,8 @@
 
     registerUpdateGuard();
     bindNumericInput('adminSearchInput');
+    bindNumericInput('nf_id');
+    bindNumericInput('nf_wifeId');
     bindNumericInput('edit_c_id');
     bindNumericInput('c_id');
 </script>

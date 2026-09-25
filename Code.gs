@@ -12,7 +12,7 @@ const ADMIN_TOKEN_TTL_SECONDS = 21600; // 6 ساعات، الحد الأعلى �
 const ADMIN_STATS_CACHE_KEY = "admin_stats_v2";
 const ADMIN_STATS_CACHE_TTL_SECONDS = 120;
 const ENABLE_SLOW_ID_SCAN_FALLBACK = false;
-const APP_VERSION = "2026.08.19.3";
+const APP_VERSION = "2026.09.25.1";
 
 const PARENT_HEADERS = [
   "رقم الهوية",
@@ -92,6 +92,10 @@ function doPost(e) {
       case "adminSearch":
         requireAdminToken_(data.adminToken);
         return loginUser(data.searchId);
+
+      case "addFamily":
+        requireAdminToken_(data.adminToken);
+        return addFamilyData(data.familyData);
 
       case "prepareSheetsForSpeed":
         requireAdminToken_(data.adminToken);
@@ -279,6 +283,74 @@ function addChildData(parentId, childData) {
       status: "success",
       message: "تم تسجيل الابن بنجاح",
       child: getSerializedRow_(sheet, targetRow)
+    });
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/**
+ * ينشئ سجل عائلة جديداً من لوحة الإدارة فقط.
+ * رقم هوية رب الأسرة هو المفتاح الرئيسي ولا يُسمح بتكراره.
+ */
+function addFamilyData(familyData) {
+  const lock = getWriteLock_();
+  lock.waitLock(10000);
+
+  try {
+    const data = familyData || {};
+    const nationalId = validateId_(data.nationalId, "رقم هوية رب الأسرة يجب أن يتكون من 9 أرقام");
+    const fullName = String(data.fullName || "").trim();
+    const birthDate = String(data.birthDate || "").trim();
+
+    if (fullName.length < 3) throw new Error("يرجى كتابة اسم رب الأسرة بالكامل");
+    if (!birthDate) throw new Error("يرجى تحديد تاريخ ميلاد رب الأسرة");
+
+    const ss = getSpreadsheet_();
+    const sheet = getSheet_(ss, 0, "شيت الآباء");
+    ensureHeaders_(sheet, PARENT_HEADERS);
+
+    if (findRowById_(sheet, nationalId, 1) !== -1) {
+      throw new Error("رقم الهوية مسجل مسبقاً ولا يمكن إنشاء عائلة مكررة");
+    }
+
+    const wifeIdRaw = normalizeId_(data.wifeId);
+    if (wifeIdRaw && !/^\d{9}$/.test(wifeIdRaw)) {
+      throw new Error("رقم هوية الزوجة يجب أن يتكون من 9 أرقام أو يُترك فارغاً");
+    }
+
+    const familyCountRaw = String(data.familyCount || "").trim();
+    const familyCount = familyCountRaw === "" ? "" : Math.max(1, parseInt(familyCountRaw, 10) || 1);
+    const targetRow = sheet.getLastRow() + 1;
+    const rowValues = [[
+      nationalId,
+      fullName,
+      birthDate,
+      calculateAgeFromDate_(birthDate),
+      String(data.status || "").trim(),
+      String(data.displacement || "").trim(),
+      familyCount,
+      String(data.wifeName || "").trim(),
+      wifeIdRaw,
+      String(data.wifeBirth || "").trim(),
+      String(data.phone || "").trim(),
+      String(data.altPhone || "").trim(),
+      String(data.telephone || "").trim(),
+      String(data.bank || "").trim(),
+      String(data.bankAccount || "").trim(),
+      String(data.bankOwner || "").trim()
+    ]];
+
+    sheet.getRange(targetRow, 1).setNumberFormat("@");
+    sheet.getRange(targetRow, 3).setNumberFormat("@");
+    sheet.getRange(targetRow, 9, 1, 2).setNumberFormat("@");
+    sheet.getRange(targetRow, 1, 1, PARENT_HEADERS.length).setValues(rowValues);
+    invalidateAdminStatsCache_();
+
+    return jsonResponse_({
+      status: "success",
+      message: "تم إنشاء سجل العائلة بنجاح",
+      parent: getSerializedRow_(sheet, targetRow)
     });
   } finally {
     lock.releaseLock();
@@ -790,6 +862,22 @@ function validateId_(value, message) {
 
 function normalizeId_(value) {
   return String(value === null || value === undefined ? "" : value).replace(/\D/g, "").trim();
+}
+
+function calculateAgeFromDate_(dateValue) {
+  const parts = String(dateValue || "").split("-");
+  if (parts.length !== 3) return "";
+
+  const birth = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+  if (isNaN(birth.getTime())) return "";
+
+  const today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  const beforeBirthday = today.getMonth() < birth.getMonth() ||
+    (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate());
+
+  if (beforeBirthday) age--;
+  return age >= 0 ? age : "";
 }
 
 function verifyAdminPassword_(password) {

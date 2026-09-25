@@ -6,16 +6,18 @@
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="app-version" content="2026.08.21.1">
+    <meta name="app-version" content="2026.09.25.1">
+    <meta name="description" content="البوابة الإلكترونية الرسمية لتحديث وإدارة بيانات عائلة أبو رجيلة بسرعة وأمان.">
     <meta name="theme-color" content="#1e2b25">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="مجلس أبو رجيلة">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>بوابة مجلس عائلة أبو رجيلة الإلكترونية</title>
-    <link rel="manifest" href="manifest.webmanifest?v=2026.08.21.1">
-    <link rel="icon" type="image/png" sizes="192x192" href="pwa-icon-192.png?v=2026.08.21.1">
-    <link rel="apple-touch-icon" href="pwa-icon-192.png?v=2026.08.21.1">
+    <link rel="canonical" href="https://rj0060.github.io/r/">
+    <link rel="manifest" href="manifest.webmanifest?v=2026.09.25.1">
+    <link rel="icon" type="image/png" sizes="192x192" href="pwa-icon-192.png?v=2026.09.25.1">
+    <link rel="apple-touch-icon" href="pwa-icon-192.png?v=2026.09.25.1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
@@ -34,24 +36,29 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
-        body { background-color: var(--bg-cream); color: var(--dark-gray); padding-bottom: 20px; min-height: 100vh; display: flex; flex-direction: column; }
+        body { background: radial-gradient(circle at 90% 0%, #edf1eb 0, transparent 30rem), var(--bg-cream); color: var(--dark-gray); padding-bottom: 20px; min-height: 100vh; display: flex; flex-direction: column; }
 
-        header { background: linear-gradient(135deg, var(--royal-olive), #1e2b25); color: white; padding: 30px 20px; text-align: center; border-bottom: 5px solid var(--royal-gold); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        header { position:relative; overflow:hidden; background: linear-gradient(135deg, #354b40, #15211b); color: white; padding: 38px 20px 34px; text-align: center; border-bottom: 5px solid var(--royal-gold); box-shadow: 0 10px 34px rgba(21,33,27,.22); }
+        header::before, header::after { content:""; position:absolute; border:1px solid rgba(197,160,89,.18); border-radius:50%; pointer-events:none; }
+        header::before { width:250px; height:250px; right:-110px; top:-140px; }
+        header::after { width:180px; height:180px; left:-80px; bottom:-120px; }
         
         .logo-container { margin-bottom: 15px; }
-        .logo-container img { max-width: 120px; height: auto; filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.3)); }
+        .logo-container img { max-width: 120px; height: auto; filter: drop-shadow(0 8px 14px rgba(0,0,0,.3)); }
         
         header h1 { font-family: 'Amiri', serif; font-size: 2.5rem; color: var(--royal-gold); margin-bottom: 5px; }
         header p { font-size: 1rem; opacity: 0.9; }
 
-        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; flex: 1; }
+        .hero-badges { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin-top:16px; }
+        .hero-badge { display:inline-flex; align-items:center; gap:7px; padding:7px 11px; border:1px solid rgba(255,255,255,.18); border-radius:999px; background:rgba(255,255,255,.08); font-size:.78rem; backdrop-filter:blur(5px); }
+        .container { width:100%; max-width: 860px; margin: 30px auto; padding: 0 20px; flex: 1; }
 
-        .card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid rgba(197, 160, 89, 0.2); margin-bottom: 25px; }
+        .card { background: rgba(255,255,255,.97); border-radius: 18px; padding: 26px; box-shadow: 0 14px 38px rgba(30,43,37,.07); border: 1px solid rgba(197,160,89,.26); margin-bottom: 25px; }
         .card-title { font-family: 'Amiri', serif; font-size: 1.6rem; color: var(--royal-olive); border-bottom: 2px solid var(--royal-gold); padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
 
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; margin-bottom: 7px; font-weight: 600; font-size: 0.95rem; color: var(--royal-olive); }
-        .form-control { width: 100%; padding: 12px; border: 1px solid #cccccc; border-radius: 8px; font-size: 1rem; transition: all 0.3s; background-color: #fcfcfc; }
+        .form-control { width: 100%; padding: 12px 13px; border: 1px solid #d7d7d2; border-radius: 10px; font-size: 1rem; transition: border-color .2s, box-shadow .2s, background .2s; background-color: #fff; }
         .form-control:focus { border-color: var(--royal-gold); outline: none; box-shadow: 0 0 8px rgba(197, 160, 89, 0.2); }
         .form-control[readonly] { background-color: var(--locked-bg); color: var(--locked-text); cursor: not-allowed; }
         
@@ -60,9 +67,9 @@
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
 
-        .btn { display: inline-block; width: 100%; padding: 14px; background-color: var(--royal-olive); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background 0.3s; text-align: center; }
+        .btn { display: inline-block; width: 100%; padding: 14px; background: linear-gradient(135deg, #3a5146, var(--royal-olive)); color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: transform .2s, box-shadow .2s, background .2s; text-align: center; box-shadow:0 8px 18px rgba(44,62,53,.14); }
         .btn:disabled { opacity: 0.65; cursor: wait; }
-        .btn:hover { background-color: #1e2b25; }
+        .btn:hover { background-color: #1e2b25; transform:translateY(-1px); box-shadow:0 11px 22px rgba(44,62,53,.2); }
         .btn-gold { background-color: var(--royal-gold); color: var(--royal-olive); }
         .btn-gold:hover { background-color: #b38f4b; color: white; }
         .btn-blue { background-color: var(--edit-blue); color: white; margin-top: 10px; }
@@ -70,7 +77,7 @@
         .install-app-button { display: none; margin-top: 12px; background-color: var(--edit-blue); color: white; }
         .install-app-button.visible { display: block; }
 
-        .section-toggle { background: var(--light-gold); padding: 12px 20px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; font-weight: bold; color: var(--royal-olive); display: flex; justify-content: space-between; align-items: center; }
+        .section-toggle { background: linear-gradient(135deg, #f8f1e4, var(--light-gold)); padding: 13px 18px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; font-weight: bold; color: var(--royal-olive); display: flex; justify-content: space-between; align-items: center; border:1px solid rgba(197,160,89,.22); }
 
         .child-row { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-right: 4px solid var(--royal-olive); display: flex; justify-content: space-between; align-items: center; }
         .child-info-meta { font-size: 0.85rem; color: #555; margin-top: 5px; display: flex; flex-wrap: wrap; gap: 12px; }
@@ -109,6 +116,8 @@
             .logo-container img { max-width: 86px; }
             header h1 { font-size: 1.55rem; line-height: 1.35; }
             header p { font-size: 0.9rem; line-height: 1.6; }
+            .hero-badges { margin-top:12px; gap:6px; }
+            .hero-badge { font-size:.7rem; padding:6px 9px; }
             .container { width: 100%; margin: 16px auto; padding: 0 10px; }
             .card { padding: 16px 12px; border-radius: 8px; margin-bottom: 16px; }
             .card-title { font-size: 1.25rem; line-height: 1.45; align-items: flex-start; }
@@ -134,10 +143,15 @@
 
 <header>
     <div class="logo-container">
-        <img src="logo.webp?v=2026.08.21.1" onerror="this.src='logo.png?v=2026.08.21.1'; this.onerror=null;" alt="شعار عائلة أبو رجيلة" decoding="async" fetchpriority="high">
+        <img src="logo.webp?v=2026.09.25.1" onerror="this.src='pwa-icon-192.png?v=2026.09.25.1'; this.onerror=null;" alt="شعار عائلة أبو رجيلة" decoding="async" fetchpriority="high">
     </div>
     <h1>مجلس عائلة أبو رجيلة (قديح)</h1>
     <p>بوابة إدارة وتحديث البيانات المركزية الذكية</p>
+    <div class="hero-badges" aria-label="مزايا البوابة">
+        <span class="hero-badge"><i class="fa-solid fa-shield-halved"></i> بيانات محمية</span>
+        <span class="hero-badge"><i class="fa-solid fa-mobile-screen"></i> متوافق مع الهاتف</span>
+        <span class="hero-badge"><i class="fa-solid fa-bolt"></i> سريع وخفيف</span>
+    </div>
 </header>
 
 <div class="container">
@@ -304,7 +318,7 @@
 </footer>
 
 <script>
-    const APP_VERSION = "2026.08.21.1";
+    const APP_VERSION = "2026.09.25.1";
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDb1SZSxen9pRPNwWu0Ac8CXqIAhot5_eJ2FBf1MtI6fHCK-ysEMaJkpoPO1AypdqQ/exec"; 
     
     let CURRENT_USER_ID = "";

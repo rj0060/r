@@ -1,12 +1,12 @@
-const APP_CACHE_VERSION = "2026.08.21.1";
+const APP_CACHE_VERSION = "2026.09.25.1";
 const APP_CACHE_NAME = "family-app-" + APP_CACHE_VERSION;
-const OFFLINE_URL = "offline.html?v=2026.08.21.1";
+const OFFLINE_URL = "offline.html?v=2026.09.25.1";
 const STATIC_ASSETS = [
   OFFLINE_URL,
-  "manifest.webmanifest?v=2026.08.21.1",
-  "pwa-icon-192.png?v=2026.08.21.1",
-  "pwa-icon-512.png?v=2026.08.21.1",
-  "pwa-maskable-512.png?v=2026.08.21.1"
+  "manifest.webmanifest?v=2026.09.25.1",
+  "pwa-icon-192.png?v=2026.09.25.1",
+  "pwa-icon-512.png?v=2026.09.25.1",
+  "pwa-maskable-512.png?v=2026.09.25.1"
 ];
 
 self.addEventListener("install", (event) => {
