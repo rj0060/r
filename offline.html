@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1e2b25">
+    <title>لا يوجد اتصال | بوابة العائلة</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background: #faf9f5;
+            color: #1e2b25;
+            font-family: Arial, Tahoma, sans-serif;
+            text-align: center;
+        }
+        main {
+            width: min(100%, 380px);
+            background: #ffffff;
+            border: 1px solid #eadfca;
+            border-radius: 8px;
+            padding: 24px 18px;
+            box-shadow: 0 8px 24px rgba(30, 43, 37, 0.08);
+        }
+        img { width: 82px; height: 82px; margin-bottom: 14px; }
+        h1 { margin: 0 0 10px; font-size: 1.35rem; color: #c5a059; }
+        p { margin: 0 0 18px; line-height: 1.8; }
+        button {
+            width: 100%;
+            min-height: 48px;
+            border: 0;
+            border-radius: 8px;
+            background: #1e2b25;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <img src="pwa-icon-192.png" alt="">
+        <h1>لا يوجد اتصال بالإنترنت</h1>
+        <p>البيانات تحتاج اتصالا بالخادم. أعد المحاولة عند توفر الشبكة.</p>
+        <button onclick="location.reload()">إعادة المحاولة</button>
+    </main>
+</body>
+</html>

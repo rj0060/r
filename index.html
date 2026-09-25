@@ -1,0 +1,781 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="app-version" content="2026.08.21.1">
+    <meta name="theme-color" content="#1e2b25">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="مجلس أبو رجيلة">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>بوابة مجلس عائلة أبو رجيلة الإلكترونية</title>
+    <link rel="manifest" href="manifest.webmanifest?v=2026.08.21.1">
+    <link rel="icon" type="image/png" sizes="192x192" href="pwa-icon-192.png?v=2026.08.21.1">
+    <link rel="apple-touch-icon" href="pwa-icon-192.png?v=2026.08.21.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Amiri:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --royal-olive: #2c3e35;
+            --royal-gold: #c5a059;
+            --light-gold: #f4ebd9;
+            --dark-gray: #333333;
+            --bg-cream: #faf9f5;
+            --locked-bg: #f0f0f0;
+            --locked-text: #666666;
+            --edit-blue: #2a6f97;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background-color: var(--bg-cream); color: var(--dark-gray); padding-bottom: 20px; min-height: 100vh; display: flex; flex-direction: column; }
+
+        header { background: linear-gradient(135deg, var(--royal-olive), #1e2b25); color: white; padding: 30px 20px; text-align: center; border-bottom: 5px solid var(--royal-gold); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        
+        .logo-container { margin-bottom: 15px; }
+        .logo-container img { max-width: 120px; height: auto; filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.3)); }
+        
+        header h1 { font-family: 'Amiri', serif; font-size: 2.5rem; color: var(--royal-gold); margin-bottom: 5px; }
+        header p { font-size: 1rem; opacity: 0.9; }
+
+        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; flex: 1; }
+
+        .card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid rgba(197, 160, 89, 0.2); margin-bottom: 25px; }
+        .card-title { font-family: 'Amiri', serif; font-size: 1.6rem; color: var(--royal-olive); border-bottom: 2px solid var(--royal-gold); padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; margin-bottom: 7px; font-weight: 600; font-size: 0.95rem; color: var(--royal-olive); }
+        .form-control { width: 100%; padding: 12px; border: 1px solid #cccccc; border-radius: 8px; font-size: 1rem; transition: all 0.3s; background-color: #fcfcfc; }
+        .form-control:focus { border-color: var(--royal-gold); outline: none; box-shadow: 0 0 8px rgba(197, 160, 89, 0.2); }
+        .form-control[readonly] { background-color: var(--locked-bg); color: var(--locked-text); cursor: not-allowed; }
+        
+        select.form-control { cursor: pointer; height: 48px; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        .btn { display: inline-block; width: 100%; padding: 14px; background-color: var(--royal-olive); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background 0.3s; text-align: center; }
+        .btn:disabled { opacity: 0.65; cursor: wait; }
+        .btn:hover { background-color: #1e2b25; }
+        .btn-gold { background-color: var(--royal-gold); color: var(--royal-olive); }
+        .btn-gold:hover { background-color: #b38f4b; color: white; }
+        .btn-blue { background-color: var(--edit-blue); color: white; margin-top: 10px; }
+        .btn-blue:hover { background-color: #1a4f6e; }
+        .install-app-button { display: none; margin-top: 12px; background-color: var(--edit-blue); color: white; }
+        .install-app-button.visible { display: block; }
+
+        .section-toggle { background: var(--light-gold); padding: 12px 20px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; font-weight: bold; color: var(--royal-olive); display: flex; justify-content: space-between; align-items: center; }
+
+        .child-row { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-right: 4px solid var(--royal-olive); display: flex; justify-content: space-between; align-items: center; }
+        .child-info-meta { font-size: 0.85rem; color: #555; margin-top: 5px; display: flex; flex-wrap: wrap; gap: 12px; }
+        .btn-edit-child { background: none; border: none; color: var(--edit-blue); cursor: pointer; font-size: 1.1rem; padding: 5px 10px; transition: transform 0.2s; display: flex; align-items: center; gap: 5px; font-weight: bold; }
+        .btn-edit-child:hover { transform: scale(1.05); color: #1a4f6e; }
+
+        .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; font-weight: 600; text-align: center; }
+        .alert-error { background-color: #f8d7da; color: #721c24; }
+        .alert-success { background-color: #d4edda; color: #155724; }
+
+        .hidden { display: none; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 0; visibility: hidden; transition: all 0.2s ease; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-box { background: white; padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 3px solid var(--royal-gold); max-width: 90%; width: 350px; transform: scale(0.9); transition: all 0.2s ease; }
+        .modal-overlay.active .modal-box { transform: scale(1); }
+        .modal-spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid var(--royal-gold); border-bottom: 5px solid var(--royal-olive); border-radius: 50%; margin: 0 auto 20px auto; animation: spin-modal 1s linear infinite; }
+        .modal-text { font-size: 1.1rem; font-weight: 700; color: var(--royal-olive); }
+        @keyframes spin-modal { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        footer { background-color: #1e2b25; color: #dddddd; text-align: center; padding: 20px; font-size: 0.9rem; border-top: 3px solid var(--royal-gold); margin-top: 40px; }
+        footer a.designer-link { color: var(--royal-gold); text-decoration: none; font-weight: bold; padding: 0 5px; transition: all 0.3s ease; }
+        footer a.designer-link:hover { color: #ffffff; text-decoration: underline; background-color: rgba(197, 160, 89, 0.2); border-radius: 4px; }
+        footer p { margin-top: 5px; font-size: 0.8rem; opacity: 0.7; }
+
+        html { -webkit-text-size-adjust: 100%; }
+        body { overflow-x: hidden; }
+        input, select, textarea, button { font-size: 16px; }
+        .btn, .section-toggle, .btn-edit-child { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+        .form-control, .btn, select.form-control { min-height: 48px; }
+
+        @media (max-width: 520px) {
+            body { padding-bottom: env(safe-area-inset-bottom); }
+            header { padding: 18px 12px; }
+            .logo-container { margin-bottom: 10px; }
+            .logo-container img { max-width: 86px; }
+            header h1 { font-size: 1.55rem; line-height: 1.35; }
+            header p { font-size: 0.9rem; line-height: 1.6; }
+            .container { width: 100%; margin: 16px auto; padding: 0 10px; }
+            .card { padding: 16px 12px; border-radius: 8px; margin-bottom: 16px; }
+            .card-title { font-size: 1.25rem; line-height: 1.45; align-items: flex-start; }
+            .section-toggle { padding: 13px 12px; gap: 8px; line-height: 1.45; }
+            .form-control { padding: 12px 10px; }
+            .btn { padding: 12px; font-size: 1rem; }
+            .child-row { align-items: flex-start; flex-direction: column; gap: 12px; }
+            .child-info-meta { gap: 8px; line-height: 1.7; }
+            .btn-edit-child { width: 100%; justify-content: center; background: #edf4f9; border-radius: 8px; padding: 10px; }
+            .modal-box { width: calc(100% - 28px); padding: 24px 18px; border-radius: 10px; }
+            footer { font-size: 0.82rem; padding: 16px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="processingModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-spinner"></div>
+        <div id="modalStatusText" class="modal-text">جاري معالجة طلبك الآن...</div>
+    </div>
+</div>
+
+<header>
+    <div class="logo-container">
+        <img src="logo.webp?v=2026.08.21.1" onerror="this.src='logo.png?v=2026.08.21.1'; this.onerror=null;" alt="شعار عائلة أبو رجيلة" decoding="async" fetchpriority="high">
+    </div>
+    <h1>مجلس عائلة أبو رجيلة (قديح)</h1>
+    <p>بوابة إدارة وتحديث البيانات المركزية الذكية</p>
+</header>
+
+<div class="container">
+    <div id="alertBox" class="alert"></div>
+
+    <div id="loginSection" class="card">
+        <div class="card-title"><i class="fa-solid fa-shield-halved"></i> تسجيل الدخول الآمن</div>
+        <div class="form-group">
+            <label>رقم الهوية الشخصية لرب الأسرة (9 أرقام):</label>
+            <input type="text" id="loginId" class="form-control" inputmode="numeric" pattern="[0-9]*" maxlength="9" autocomplete="off" placeholder="أدخل رقم هويتك المكون من 9 أرقام">
+        </div>
+        <button id="loginButton" class="btn btn-gold" onclick="handleLogin()">دخول النظام</button>
+        <button id="installAppButton" class="btn install-app-button" type="button" onclick="installFamilyApp()"><i class="fa-solid fa-mobile-screen-button"></i> تثبيت التطبيق</button>
+    </div>
+
+    <div id="dashboardSection" class="hidden">
+        
+        <div style="margin-bottom: 20px; text-align: left;">
+            <button class="btn btn-gold" style="width: auto; padding: 8px 15px; font-size: 0.9rem;" onclick="location.reload()">تسجيل الخروج</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><i class="fa-solid fa-user-tie"></i> مرحباً بك: <span id="parentNameHeader" style="color: var(--royal-gold);"></span></div>
+            
+            <div class="section-toggle" onclick="toggleDiv('personalSection')"><span>البيانات الشخصية، الزوجة والنزوح</span> <i class="fa-solid fa-chevron-down"></i></div>
+            <div id="personalSection" class="hidden" style="padding: 10px 5px;">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>تاريخ ميلاد رب الأسرة (متاح للتعديل):</label>
+                        <input type="date" id="p_birthDate" class="form-control" style="border: 1px solid var(--royal-gold);">
+                    </div>
+                    <div class="form-group">
+                        <label>العمر الحالي (مغلق - يُحسب آلياً):</label>
+                        <input type="text" id="p_age" class="form-control" readonly>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>اسم الزوجة بالكامل (مغلق):</label>
+                    <input type="text" id="p_wifeName" class="form-control" readonly>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>رقم هوية الزوجة (مغلق):</label>
+                        <input type="text" id="p_wifeId" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>تاريخ ميلاد الزوجة (متاح للتعديل):</label>
+                        <input type="date" id="p_wifeBirth" class="form-control" style="border: 1px solid var(--royal-gold);">
+                    </div>
+                </div>
+
+                <hr style="margin: 15px 0; border: 0; border-top: 1px dashed #ccc;">
+
+                <div class="grid-2">
+                    <div class="form-group"><label>مكان النزوح الحالي:</label><input type="text" id="p_displacement" class="form-control"></div>
+                    <div class="form-group"><label>عدد أفراد الأسرة:</label><input type="number" id="p_familyCount" class="form-control"></div>
+                </div>
+                <div class="form-group"><label>الحالة الاجتماعية (مغلق):</label><input type="text" id="p_status" class="form-control" readonly></div>
+                
+                <button class="btn" onclick="updatePersonalGroup()">حفظ وتحديث البيانات الشخصية والنزوح</button>
+            </div>
+
+            <div class="section-toggle" onclick="toggleDiv('contactSection')"><span>بيانات الاتصال والطوارئ</span> <i class="fa-solid fa-chevron-down"></i></div>
+            <div id="contactSection" class="hidden" style="padding: 10px 5px;">
+                <div class="grid-2">
+                    <div class="form-group"><label>رقم الجوال الأساسي:</label><input type="text" id="p_phone" class="form-control"></div>
+                    <div class="form-group"><label>رقم جوال بديل:</label><input type="text" id="p_altPhone" class="form-control"></div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label>هاتف 1:</label><input type="text" id="p_tel1" class="form-control"></div>
+                    <div class="form-group"><label>رقم بديل الطوارئ:</label><input type="text" id="p_emergency" class="form-control"></div>
+                </div>
+                <button class="btn" onclick="updateContactGroup()">حفظ وتحديث الاتصالات</button>
+            </div>
+
+            <div class="section-toggle" onclick="toggleDiv('bankSection')"><span>البيانات البنكية للدعم والمعاملات</span> <i class="fa-solid fa-chevron-down"></i></div>
+            <div id="bankSection" class="hidden" style="padding: 10px 5px;">
+                <div class="form-group">
+                    <label>اسم البنك أو المحفظة المالية:</label>
+                    <select id="p_bank" class="form-control" style="border: 1px solid var(--royal-gold);">
+                        <option value="">-- اختر البنك أو المحفظة من القائمة --</option>
+                        <option value="بنك فلسطين">بنك فلسطين</option>
+                        <option value="بنك القدس">بنك القدس</option>
+                        <option value="البنك الإسلامي الفلسطيني">البنك الإسلامي الفلسطيني</option>
+                        <option value="البنك الإسلامي العربي">البنك الإسلامي العربي</option>
+                        <option value="محفظة جوال باي">محفظة جوال باي</option>
+                        <option value="محفظة بال باي">محفظة بال باي</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>رقم الحساب البنكي أو رقم المحفظة (059):</label><input type="text" id="p_bankAccount" class="form-control"></div>
+                <div class="form-group"><label>اسم صاحب الحساب بالكامل:</label><input type="text" id="p_bankOwner" class="form-control"></div>
+                <button class="btn" onclick="updateBankGroup()">حفظ وتحديث البيانات البنكية</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><i class="fa-solid fa-children"></i> إدارة وتوثيق بيانات الأبناء</div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 10px; color: var(--royal-olive);">الأبناء المدرجين حالياً في النظام:</h3>
+            <div id="childrenListContainer"></div>
+
+            <div id="editChildWrapper" class="hidden" style="background: #edf4f9; padding: 20px; border-radius: 10px; border: 2px solid var(--edit-blue); margin: 20px 0;">
+                <h4 style="color: var(--edit-blue); margin-bottom: 15px;"><i class="fa-solid fa-user-pen"></i> تعديل بيانات: <span id="editingChildName"></span></h4>
+                <input type="hidden" id="edit_oldChildId">
+                <div class="grid-2">
+                    <div class="form-group"><label>اسم الابن بالكامل:</label><input type="text" id="edit_c_name" class="form-control"></div>
+                    <div class="form-group"><label>رقم هوية الابن (9 أرقام):</label><input type="text" id="edit_c_id" class="form-control" inputmode="numeric" pattern="[0-9]*" maxlength="9" autocomplete="off"></div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label>تاريخ الميلاد:</label><input type="date" id="edit_c_birth" class="form-control"></div>
+                    <div class="form-group"><label>الجنس:</label>
+                        <select id="edit_c_gender" class="form-control">
+                            <option value="ذكر">ذكر</option>
+                            <option value="أنثى">أنثى</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label>التخصص الجامعي:</label><input type="text" id="edit_c_major" class="form-control"></div>
+                    <div class="form-group"><label>الجامعة:</label><input type="text" id="edit_c_uni" class="form-control"></div>
+                </div>
+                <div class="form-group"><label>السنة الدراسية الحالية:</label><input type="text" id="edit_c_year" class="form-control"></div>
+                <div class="grid-2">
+                    <button class="btn btn-blue" onclick="submitChildUpdate()">تحديث وحفظ بيانات الابن</button>
+                    <button class="btn" style="background:#888; margin-top:10px;" onclick="document.getElementById('editChildWrapper').classList.add('hidden')">إلغاء</button>
+                </div>
+            </div>
+
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+            
+            <div class="section-toggle" style="background-color: #e2ede8;" onclick="toggleDiv('addChildForm')"><span><i class="fa-solid fa-plus"></i> إضافة ابن/ابنة جديد للمنظومة</span> <i class="fa-solid fa-chevron-down"></i></div>
+            <div id="addChildForm" class="hidden" style="padding: 10px 5px;">
+                <div class="grid-2">
+                    <div class="form-group"><label>اسم الابن بالكامل:</label><input type="text" id="c_name" class="form-control"></div>
+                    <div class="form-group"><label>رقم هوية الابن (9 أرقام):</label><input type="text" id="c_id" class="form-control" inputmode="numeric" pattern="[0-9]*" maxlength="9" autocomplete="off"></div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label>تاريخ الميلاد:</label><input type="date" id="c_birth" class="form-control"></div>
+                    <div class="form-group"><label>الجنس:</label>
+                        <select id="c_gender" class="form-control">
+                            <option value="ذكر">ذكر</option>
+                            <option value="أنثى">أنثى</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="background: #fdfdfd; padding: 10px; border: 1px dashed var(--royal-gold); border-radius: 8px; margin-bottom: 15px;">
+                    <p style="font-size: 0.85rem; font-weight: bold; margin-bottom: 10px; color: var(--royal-olive);">البيانات الجامعية (إن وجد):</p>
+                    <div class="grid-2">
+                        <div class="form-group"><label>التخصص الجامعي:</label><input type="text" id="c_major" class="form-control" placeholder="مثال: هندسة برمجيات"></div>
+                        <div class="form-group"><label>الجامعة:</label><input type="text" id="c_uni" class="form-control"></div>
+                    </div>
+                    <div class="form-group"><label>السنة الدراسية الحالية:</label><input type="text" id="c_year" class="form-control" placeholder="مثال: سنة ثانية"></div>
+                </div>
+                <button class="btn btn-gold" onclick="submitNewChild()">إدراج وتثبيت الابن في كشوفات العائلة</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<footer>
+    <div>تم تطوير الموقع بواسطة <a href="https://www.instagram.com/hamad_a_19/" target="_blank" class="designer-link"><i class="fa-brands fa-instagram"></i> م. حمادة أبو رجيلة</a> لصالح مجلس عائلة أبو رجيلة</div>
+    <p>© جميع الحقوق محفوظة لمحرك بيانات العائلة الذكي 2026</p>
+</footer>
+
+<script>
+    const APP_VERSION = "2026.08.21.1";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDb1SZSxen9pRPNwWu0Ac8CXqIAhot5_eJ2FBf1MtI6fHCK-ysEMaJkpoPO1AypdqQ/exec"; 
+    
+    let CURRENT_USER_ID = "";
+    let ALL_CHILDREN_DATA = [];
+    let CURRENT_PARENT_DATA = {};
+    let IS_REQUEST_RUNNING = false;
+    let DEFERRED_INSTALL_PROMPT = null;
+
+    function toggleDiv(id) {
+        const element = document.getElementById(id);
+        if (element) element.classList.toggle('hidden');
+    }
+
+    function showAlert(msg, isSuccess = false) {
+        const box = document.getElementById('alertBox');
+        box.textContent = msg;
+        box.className = isSuccess ? "alert alert-success" : "alert alert-error";
+        box.style.display = "block";
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function showProcessingModal(show, text = "جاري معالجة طلبك الآن...") {
+        const modal = document.getElementById('processingModal');
+        const textElement = document.getElementById('modalStatusText');
+        if (show) {
+            textElement.textContent = text;
+            modal.classList.add('active');
+        } else {
+            modal.classList.remove('active');
+        }
+    }
+
+    function postApi(payload) {
+        const requestPayload = Object.assign({ clientVersion: APP_VERSION }, payload);
+        const apiUrl = `${SCRIPT_URL}?v=${encodeURIComponent(APP_VERSION)}&t=${Date.now()}`;
+
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", apiUrl, true);
+            xhr.timeout = 30000;
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) return;
+
+                try {
+                    if (xhr.status && (xhr.status < 200 || xhr.status >= 300)) {
+                        throw new Error("تعذر الاتصال بالخادم. حاول مرة أخرى بعد قليل.");
+                    }
+
+                    const response = JSON.parse(xhr.responseText || "{}");
+                    if (response.status !== "success") {
+                        throw new Error(response.message || "تعذر تنفيذ الطلب.");
+                    }
+
+                    resolve(response);
+                } catch (error) {
+                    reject(error);
+                }
+            };
+
+            xhr.onerror = function () {
+                reject(new Error("فشل الاتصال بالخادم. تأكد من رابط النشر والإنترنت."));
+            };
+
+            xhr.ontimeout = function () {
+                reject(new Error("انتهت مهلة الاتصال بالخادم. حاول مرة أخرى."));
+            };
+
+            xhr.send(JSON.stringify(requestPayload));
+        });
+    }
+
+    function setRequestRunning(isRunning) {
+        IS_REQUEST_RUNNING = isRunning;
+        document.querySelectorAll('button').forEach((button) => {
+            if (button.closest('#dashboardSection') || button.id === 'loginButton') {
+                button.disabled = isRunning;
+            }
+        });
+    }
+
+    function registerUpdateGuard() {
+        try {
+            const storedVersion = localStorage.getItem('family_site_version');
+            if (storedVersion && storedVersion !== APP_VERSION && !location.search.includes(`v=${APP_VERSION}`)) {
+                localStorage.setItem('family_site_version', APP_VERSION);
+                location.replace(`${location.pathname}?v=${encodeURIComponent(APP_VERSION)}`);
+                return;
+            }
+
+            localStorage.setItem('family_site_version', APP_VERSION);
+
+            if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+                navigator.serviceWorker.register(`sw.js?v=${encodeURIComponent(APP_VERSION)}`, { updateViaCache: 'none' })
+                    .then((registration) => {
+                        registration.update();
+                        if (registration.waiting) {
+                            registration.waiting.postMessage({ type: "SKIP_WAITING" });
+                        }
+                    })
+                    .catch(() => {});
+            }
+        } catch (error) {}
+    }
+
+    function setupInstallPrompt() {
+        const installButton = document.getElementById('installAppButton');
+        if (!installButton) return;
+
+        if (isStandaloneApp()) {
+            installButton.classList.remove('visible');
+            return;
+        }
+
+        if (isIosDevice()) {
+            installButton.classList.add('visible');
+        }
+
+        window.addEventListener('beforeinstallprompt', (event) => {
+            event.preventDefault();
+            DEFERRED_INSTALL_PROMPT = event;
+            installButton.classList.add('visible');
+        });
+
+        window.addEventListener('appinstalled', () => {
+            DEFERRED_INSTALL_PROMPT = null;
+            installButton.classList.remove('visible');
+        });
+    }
+
+    async function installFamilyApp() {
+        if (DEFERRED_INSTALL_PROMPT) {
+            DEFERRED_INSTALL_PROMPT.prompt();
+            await DEFERRED_INSTALL_PROMPT.userChoice.catch(() => null);
+            DEFERRED_INSTALL_PROMPT = null;
+            document.getElementById('installAppButton').classList.remove('visible');
+            return;
+        }
+
+        if (isIosDevice()) {
+            alert("على iPhone: اضغط زر المشاركة في Safari ثم اختر إضافة إلى الشاشة الرئيسية.");
+            return;
+        }
+
+        alert("إذا لم يظهر خيار التثبيت، افتح قائمة المتصفح واختر تثبيت التطبيق أو إضافة إلى الشاشة الرئيسية.");
+    }
+
+    function isStandaloneApp() {
+        return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    }
+
+    function isIosDevice() {
+        return /iphone|ipad|ipod/i.test(navigator.userAgent);
+    }
+
+    function normalizeIdInput(value) {
+        return String(value || "").replace(/\D/g, "").slice(0, 9);
+    }
+
+    function isValidId(value) {
+        return /^\d{9}$/.test(normalizeIdInput(value));
+    }
+
+    function bindNumericInput(id) {
+        const input = document.getElementById(id);
+        if (!input) return;
+
+        input.addEventListener('input', () => {
+            input.value = normalizeIdInput(input.value);
+        });
+    }
+
+    function escapeHtml(value) {
+        return String(value === null || value === undefined ? "" : value).replace(/[&<>"']/g, (char) => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        }[char]));
+    }
+
+    function makeChildRecord(childData) {
+        return {
+            'اسم الابن': childData.name,
+            'رقم هوية الابن': childData.id,
+            'تاريخ الميلاد': childData.birthDate,
+            'الجنس': childData.gender,
+            'التخصص الجامعي': childData.major || "",
+            'الجامعة': childData.university || "",
+            'السنة الدراسية الحالية': childData.year || ""
+        };
+    }
+
+    function calculateAge(birthDateString) {
+        const cleanDate = formatDateDisplay(birthDateString);
+        if(!cleanDate) return "غير معروف";
+        const parts = cleanDate.split('-');
+        if(parts.length !== 3) return birthDateString;
+        
+        const birthDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        if (isNaN(birthDate.getTime())) return birthDateString;
+
+        const today = new Date();
+        
+        let years = today.getFullYear() - birthDate.getFullYear();
+        let months = today.getMonth() - birthDate.getMonth();
+        
+        if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
+            years--;
+            months += 12;
+        }
+        if (today.getDate() < birthDate.getDate()) { months--; }
+        if (years === 0) { return `${months} شهر`; }
+        return `${years} سنة و ${months >= 0 ? months : 0} شهر`;
+    }
+
+    function formatDateDisplay(dateString) {
+        if(!dateString) return "";
+        const value = String(dateString).trim();
+        if(value.includes("T")) return value.split('T')[0];
+        if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+
+        const slashDate = value.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
+        if (slashDate) {
+            const day = slashDate[1].padStart(2, '0');
+            const month = slashDate[2].padStart(2, '0');
+            return `${slashDate[3]}-${month}-${day}`;
+        }
+
+        return value;
+    }
+
+    async function handleLogin() {
+        const id = normalizeIdInput(document.getElementById('loginId').value);
+        document.getElementById('loginId').value = id;
+
+        if(!isValidId(id)) {
+            showAlert("يرجى إدخال رقم هوية صحيح مكون من 9 أرقام");
+            return;
+        }
+        
+        if (IS_REQUEST_RUNNING) return;
+        setRequestRunning(true);
+        showProcessingModal(true, "جاري التحقق من رقم الهوية في سجلات المجلس...");
+        document.getElementById('alertBox').style.display = "none";
+
+        try {
+            const response = await postApi({ action: "login", nationalId: id });
+            setupDashboard(response, id);
+        } catch(error) {
+            showAlert(error.message || "خطأ في الاتصال بالخادم، تأكد من إعداد النشر بشكل صحيح.");
+        } finally {
+            showProcessingModal(false);
+            setRequestRunning(false);
+        }
+    }
+
+    function setupDashboard(data, id) {
+        CURRENT_USER_ID = id;
+        CURRENT_PARENT_DATA = data.parent || {};
+        ALL_CHILDREN_DATA = data.children || [];
+        document.getElementById('loginSection').classList.add('hidden');
+        document.getElementById('dashboardSection').classList.remove('hidden');
+        document.getElementById('editChildWrapper').classList.add('hidden');
+        
+        const parent = CURRENT_PARENT_DATA;
+        document.getElementById('parentNameHeader').textContent = parent['الاسم الكامل'] || "";
+        document.getElementById('p_birthDate').value = formatDateDisplay(parent['تاريخ الميلاد']);
+        document.getElementById('p_age').value = parent['العمر'] || calculateAge(parent['تاريخ الميلاد']);
+        document.getElementById('p_status').value = parent['الحالة الاجتماعية'] || "";
+        document.getElementById('p_displacement').value = parent['مكان النزوح الحالي'] || "";
+        document.getElementById('p_familyCount').value = parent['عدد أفراد الأسرة'] || "";
+        document.getElementById('p_wifeName').value = parent['اسم الزوجة'] || "غير مدرج";
+        document.getElementById('p_wifeId').value = parent['رقم هوية الزوجة'] || "غير مدرج";
+        
+        document.getElementById('p_wifeBirth').value = parent['تاريخ ميلاد الزوجة'] ? formatDateDisplay(parent['تاريخ ميلاد الزوجة']) : "";
+        document.getElementById('p_phone').value = parent['رقم الجوال'] || "";
+        document.getElementById('p_altPhone').value = parent['رقم جوال بديل'] || "";
+        document.getElementById('p_tel1').value = parent['رقم الهاتف'] || "";
+        document.getElementById('p_emergency').value = parent['رقم جوال بديل'] || "";
+        document.getElementById('p_bank').value = parent['البنك'] || "";
+        document.getElementById('p_bankAccount').value = parent['رقم الحساب البنكي'] || "";
+        document.getElementById('p_bankOwner').value = parent['اسم صاحب الحساب'] || "";
+
+        renderChildrenList();
+    }
+
+    function renderChildrenList() {
+        const container = document.getElementById('childrenListContainer');
+        container.innerHTML = "";
+        
+        if(ALL_CHILDREN_DATA.length === 0) {
+            container.innerHTML = "<p style='color:gray; font-size:0.9rem; padding:10px;'>لا يوجد أبناء مسجلين حالياً باسمك.</p>";
+        } else {
+            let htmlContent = "";
+            ALL_CHILDREN_DATA.forEach((child, index) => {
+                const childBirth = child['تاريخ الميلاد'];
+                const childName = escapeHtml(child['اسم الابن'] || "");
+                const childGender = escapeHtml(child['الجنس'] || "");
+                const childId = escapeHtml(child['رقم هوية الابن'] || "");
+                const childBirthText = escapeHtml(formatDateDisplay(childBirth));
+                const childAge = escapeHtml(calculateAge(childBirth));
+
+                htmlContent += `
+                    <div class="child-row">
+                        <div>
+                            <strong>${childName}</strong> <span style="font-size:0.85rem; color:#666;">(${childGender})</span>
+                            <div class="child-info-meta">
+                                <span><i class="fa-solid fa-id-card"></i> هوية: ${childId}</span>
+                                <span><i class="fa-solid fa-calendar-days"></i> الميلاد: ${childBirthText}</span>
+                                <span style="color: var(--royal-gold); font-weight: bold;"><i class="fa-solid fa-hourglass-half"></i> العمر الحالي: ${childAge}</span>
+                            </div>
+                        </div>
+                        <button class="btn-edit-child" onclick="populateChildEditForm(${index})">
+                            <i class="fa-solid fa-user-gear"></i> تعديل
+                        </button>
+                    </div>`;
+            });
+            container.innerHTML = htmlContent;
+        }
+    }
+
+    function populateChildEditForm(index) {
+        const child = ALL_CHILDREN_DATA[index];
+        document.getElementById('editingChildName').textContent = child['اسم الابن'];
+        document.getElementById('edit_oldChildId').value = child['رقم هوية الابن'];
+        document.getElementById('edit_c_name').value = child['اسم الابن'];
+        document.getElementById('edit_c_id').value = child['رقم هوية الابن'];
+        document.getElementById('edit_c_birth').value = formatDateDisplay(child['تاريخ الميلاد']);
+        document.getElementById('edit_c_gender').value = child['الجنس'] || "ذكر";
+        document.getElementById('edit_c_major').value = child['التخصص الجامعي'] || "";
+        document.getElementById('edit_c_uni').value = child['الجامعة'] || "";
+        document.getElementById('edit_c_year').value = child['السنة الدراسية الحالية'] || "";
+        
+        const wrapper = document.getElementById('editChildWrapper');
+        wrapper.classList.remove('hidden');
+        wrapper.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function submitChildUpdate() {
+        const oldId = normalizeIdInput(document.getElementById('edit_oldChildId').value);
+        const name = document.getElementById('edit_c_name').value.trim();
+        const id = normalizeIdInput(document.getElementById('edit_c_id').value);
+        const birth = document.getElementById('edit_c_birth').value;
+        const gender = document.getElementById('edit_c_gender').value;
+        const major = document.getElementById('edit_c_major').value.trim();
+        const uni = document.getElementById('edit_c_uni').value.trim();
+        const year = document.getElementById('edit_c_year').value.trim();
+        document.getElementById('edit_c_id').value = id;
+
+        if (!name) { showAlert("يرجى كتابة اسم الابن بالكامل!"); return; }
+        if (!isValidId(id)) { showAlert("رقم هوية الابن يجب أن يتكون من 9 أرقام تماماً!"); return; }
+        if (!birth) { showAlert("يرجى تحديد تاريخ ميلاد الابن الصحيح!"); return; }
+
+        if (IS_REQUEST_RUNNING) return;
+        setRequestRunning(true);
+        showProcessingModal(true, "جاري تحديث بيانات الابن بصفة فورية...");
+        const childData = { name: name, id: id, birthDate: birth, gender: gender, major: major, university: uni, year: year };
+
+        try {
+            const response = await postApi({ action: "updateChild", parentId: CURRENT_USER_ID, oldChildId: oldId, childData: childData });
+            const updatedChild = response.child || makeChildRecord(childData);
+            const existingIndex = ALL_CHILDREN_DATA.findIndex(child => normalizeIdInput(child['رقم هوية الابن']) === oldId);
+
+            if (existingIndex !== -1) {
+                ALL_CHILDREN_DATA[existingIndex] = updatedChild;
+            } else {
+                ALL_CHILDREN_DATA.push(updatedChild);
+            }
+
+            renderChildrenList();
+            showAlert("تم تحديث بيانات الابن بنجاح كلي في النظام!", true);
+            document.getElementById('editChildWrapper').classList.add('hidden');
+        } catch(error) {
+            showAlert(error.message || "حدث خطأ أثناء الاتصال بالخادم.");
+        } finally {
+            showProcessingModal(false);
+            setRequestRunning(false);
+        }
+    }
+
+    async function sendUpdate(fields, modalText) {
+        if (IS_REQUEST_RUNNING) return;
+        setRequestRunning(true);
+        showProcessingModal(true, modalText);
+
+        try {
+            await postApi({ action: "updateParent", nationalId: CURRENT_USER_ID, fields: fields });
+            Object.assign(CURRENT_PARENT_DATA, fields);
+            document.getElementById('p_age').value = calculateAge(CURRENT_PARENT_DATA['تاريخ الميلاد']);
+            showAlert("تم حفظ وتحديث البيانات في جدول المجلس بنجاح!", true);
+        } catch(error) {
+            showAlert(error.message || "حدث خطأ أثناء حفظ البيانات.");
+        } finally {
+            showProcessingModal(false);
+            setRequestRunning(false);
+        }
+    }
+
+    function updatePersonalGroup() {
+        const fields = {};
+        fields['تاريخ الميلاد'] = document.getElementById('p_birthDate').value; 
+        fields['مكان النزوح الحالي'] = document.getElementById('p_displacement').value;
+        fields['عدد أفراد الأسرة'] = document.getElementById('p_familyCount').value;
+        fields['تاريخ ميلاد الزوجة'] = document.getElementById('p_wifeBirth').value;
+        sendUpdate(fields, "جاري تحديث البيانات الشخصية والنزوح...");
+    }
+
+    function updateContactGroup() {
+        const fields = {};
+        fields['رقم الجوال'] = document.getElementById('p_phone').value;
+        fields['رقم جوال بديل'] = document.getElementById('p_altPhone').value;
+        fields['رقم الهاتف'] = document.getElementById('p_tel1').value;
+        sendUpdate(fields, "جاري حفظ وتحديث بيانات الاتصال...");
+    }
+
+    function updateBankGroup() {
+        const fields = {};
+        fields['البنك'] = document.getElementById('p_bank').value;
+        fields['رقم الحساب البنكي'] = document.getElementById('p_bankAccount').value;
+        fields['اسم صاحب الحساب'] = document.getElementById('p_bankOwner').value;
+        sendUpdate(fields, "جاري إرسال وتحديث البيانات البنكية...");
+    }
+
+    async function submitNewChild() {
+        const name = document.getElementById('c_name').value.trim();
+        const id = normalizeIdInput(document.getElementById('c_id').value);
+        const birth = document.getElementById('c_birth').value;
+        const gender = document.getElementById('c_gender').value;
+        const major = document.getElementById('c_major').value.trim();
+        const uni = document.getElementById('c_uni').value.trim();
+        const year = document.getElementById('c_year').value.trim();
+        document.getElementById('c_id').value = id;
+
+        if(!name || !isValidId(id) || !birth) {
+            showAlert("يرجى تعبئة الحقول الأساسية للابن (الاسم، الهوية 9 أرقام، تاريخ الميلاد)");
+            return;
+        }
+
+        if (IS_REQUEST_RUNNING) return;
+        setRequestRunning(true);
+        showProcessingModal(true, "جاري فحص وإدراج الفرد الجديد...");
+        const childData = { name: name, id: id, birthDate: birth, gender: gender, major: major, university: uni, year: year };
+
+        try {
+            const response = await postApi({ action: "addChild", parentId: CURRENT_USER_ID, childData: childData });
+            ALL_CHILDREN_DATA.push(response.child || makeChildRecord(childData));
+            renderChildrenList();
+
+            showAlert("تم تسجيل الابن بنجاح وتثبيته!", true);
+            document.getElementById('c_name').value = "";
+            document.getElementById('c_id').value = "";
+            document.getElementById('c_birth').value = "";
+            document.getElementById('c_major').value = "";
+            document.getElementById('c_uni').value = "";
+            document.getElementById('c_year').value = "";
+            document.getElementById('addChildForm').classList.add('hidden');
+        } catch(error) {
+            showAlert(error.message || "حدث خطأ أثناء إضافة الابن.");
+        } finally {
+            showProcessingModal(false);
+            setRequestRunning(false);
+        }
+    }
+
+    registerUpdateGuard();
+    setupInstallPrompt();
+    bindNumericInput('loginId');
+    bindNumericInput('edit_c_id');
+    bindNumericInput('c_id');
+</script>
+</body>
+</html>

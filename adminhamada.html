@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="app-version" content="2026.08.21.1">
+    <meta name="theme-color" content="#4a154b">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="إدارة أبو رجيلة">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>لوحة تحكم الإدارة المركزية | عائلة أبو رجيلة</title>
+    <link rel="manifest" href="manifest.webmanifest?v=2026.08.21.1">
+    <link rel="icon" type="image/png" sizes="192x192" href="pwa-icon-192.png?v=2026.08.21.1">
+    <link rel="apple-touch-icon" href="pwa-icon-192.png?v=2026.08.21.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Amiri:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --royal-olive: #1e2b25;
+            --royal-gold: #c5a059;
+            --light-gold: #f4ebd9;
+            --dark-gray: #333333;
+            --bg-cream: #faf9f5;
+            --edit-blue: #2a6f97;
+            --admin-purple: #4a154b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background-color: var(--bg-cream); color: var(--dark-gray); padding-bottom: 20px; min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* شاشة تسجيل الدخول الاحترافية البديلة للـ Prompt */
+        #adminLockScreen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #2d0b2e, #1a041b);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10000; transition: all 0.5s ease;
+        }
+        .lock-card {
+            background: white; padding: 40px 30px; border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3); border: 3px solid var(--royal-gold);
+            width: 100%; max-width: 420px; text-align: center;
+            animation: fadeInDown 0.5s ease;
+        }
+        .lock-icon {
+            width: 70px; height: 70px; background: #fdf6ff; color: var(--admin-purple);
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 2rem; margin: 0 auto 20px auto; border: 2px solid var(--royal-gold);
+        }
+        .lock-card h2 { font-family: 'Amiri', serif; font-size: 1.8rem; color: var(--admin-purple); margin-bottom: 10px; }
+        .lock-card p { font-size: 0.9rem; color: #666; margin-bottom: 25px; }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* بقية تنسيقات اللوحة */
+        header { background: linear-gradient(135deg, var(--admin-purple), #2d0b2e); color: white; padding: 25px 20px; text-align: center; border-bottom: 5px solid var(--royal-gold); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        header h1 { font-family: 'Amiri', serif; font-size: 2.2rem; color: var(--royal-gold); margin-bottom: 5px; }
+        header p { font-size: 0.95rem; opacity: 0.9; }
+
+        .container { max-width: 850px; margin: 25px auto; padding: 0 20px; flex: 1; }
+        .card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid rgba(74, 21, 75, 0.2); margin-bottom: 25px; }
+        .card-title { font-family: 'Amiri', serif; font-size: 1.6rem; color: var(--admin-purple); border-bottom: 2px solid var(--royal-gold); padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        @media (max-width: 650px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 450px) { .stats-grid { grid-template-columns: 1fr; } }
+        
+        .stat-box { padding: 15px; border-radius: 10px; text-align: center; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .stat-box.color1 { background: linear-gradient(135deg, #4a154b, #632064); border-bottom: 4px solid var(--royal-gold); }
+        .stat-box.color2 { background: linear-gradient(135deg, #1f4068, #162447); border-bottom: 4px solid #00b4d8; }
+        .stat-box.color3 { background: linear-gradient(135deg, #7b2cbf, #5a189a); border-bottom: 4px solid #e0aaff; }
+        .stat-box.color4 { background: linear-gradient(135deg, #d90429, #ef233c); border-bottom: 4px solid #ffb703; }
+        .stat-box h4 { font-size: 0.9rem; opacity: 0.85; font-weight: 600; margin-bottom: 5px; }
+        .stat-box .num { font-size: 1.8rem; font-weight: 700; font-family: sans-serif; }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.95rem; color: var(--admin-purple); }
+        .form-control { width: 100%; padding: 11px; border: 1px solid #cccccc; border-radius: 8px; font-size: 1rem; transition: all 0.3s; background-color: #fcfcfc; }
+        .form-control:focus { border-color: var(--royal-gold); outline: none; box-shadow: 0 0 8px rgba(197, 160, 89, 0.2); }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        .btn { display: inline-block; width: 100%; padding: 13px; background-color: var(--admin-purple); color: white; border: none; border-radius: 8px; font-size: 1.05rem; font-weight: bold; cursor: pointer; transition: background 0.3s; text-align: center; }
+        .btn:disabled { opacity: 0.65; cursor: wait; }
+        .btn:hover { background-color: #350d36; }
+        .btn-gold { background-color: var(--royal-gold); color: #222; }
+        .btn-gold:hover { background-color: #b38f4b; color: white; }
+        .btn-blue { background-color: var(--edit-blue); color: white; margin-top: 10px; }
+
+        .section-toggle { background: #fdf6ff; padding: 12px 20px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; font-weight: bold; color: var(--admin-purple); border: 1px solid #ebd6ed; display: flex; justify-content: space-between; align-items: center; }
+        .child-row { background: #fdfdfd; padding: 14px; border-radius: 8px; margin-bottom: 10px; border-right: 4px solid var(--admin-purple); border-left: 1px solid #eee; border-top: 1px solid #eee; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .child-info-meta { font-size: 0.85rem; color: #555; margin-top: 5px; display: flex; flex-wrap: wrap; gap: 12px; }
+        .btn-edit-child { background: none; border: none; color: var(--edit-blue); cursor: pointer; font-size: 1.05rem; font-weight: bold; display: flex; align-items: center; gap: 5px; }
+
+        .hidden { display: none !important; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 0; visibility: hidden; transition: all 0.2s ease; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-box { background: white; padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 3px solid var(--royal-gold); width: 340px; }
+        .modal-spinner { width: 45px; height: 45px; border: 5px solid #f3f3f3; border-top: 5px solid var(--royal-gold); border-bottom: 5px solid var(--admin-purple); border-radius: 50%; margin: 0 auto 15px auto; animation: spin-modal 1s linear infinite; }
+        @keyframes spin-modal { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        html { -webkit-text-size-adjust: 100%; }
+        body { overflow-x: hidden; }
+        input, select, textarea, button { font-size: 16px; }
+        .btn, .section-toggle, .btn-edit-child { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+        .form-control, .btn, select.form-control { min-height: 48px; }
+        .admin-actions { display: grid; gap: 10px; margin-bottom: 25px; }
+        .admin-search-row { display: flex; gap: 10px; }
+        .admin-search-row .btn { flex: 0 0 130px; width: 130px; }
+
+        @media (max-width: 520px) {
+            body { padding-bottom: env(safe-area-inset-bottom); }
+            #adminLockScreen { padding: 12px; }
+            .lock-card { padding: 24px 16px; max-width: calc(100% - 20px); border-radius: 10px; }
+            .lock-icon { width: 56px; height: 56px; font-size: 1.5rem; margin-bottom: 14px; }
+            .lock-card h2 { font-size: 1.35rem; line-height: 1.4; }
+            .lock-card p { font-size: 0.85rem; line-height: 1.6; }
+            header { padding: 18px 12px; }
+            header h1 { font-size: 1.55rem; line-height: 1.35; }
+            header p { font-size: 0.88rem; line-height: 1.6; }
+            .container { width: 100%; margin: 16px auto; padding: 0 10px; }
+            .card { padding: 16px 12px; border-radius: 8px; margin-bottom: 16px; }
+            .card-title { font-size: 1.25rem; line-height: 1.45; align-items: flex-start; }
+            .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+            .stat-box { padding: 12px 8px; border-radius: 8px; }
+            .stat-box h4 { font-size: 0.78rem; line-height: 1.5; }
+            .stat-box .num { font-size: 1.45rem; }
+            .section-toggle { padding: 13px 12px; gap: 8px; line-height: 1.45; }
+            .form-control { padding: 12px 10px; }
+            .btn { padding: 12px; font-size: 1rem; }
+            .admin-search-row { flex-direction: column; }
+            .admin-search-row .btn { width: 100%; flex: auto; }
+            .child-row { align-items: flex-start; flex-direction: column; gap: 12px; }
+            .child-info-meta { gap: 8px; line-height: 1.7; }
+            .btn-edit-child { width: 100%; justify-content: center; background: #edf4f9; border-radius: 8px; padding: 10px; }
+            .modal-box { width: calc(100% - 28px); padding: 24px 18px; border-radius: 10px; }
+            #dynamicDashboardSection { padding: 14px 10px !important; border-radius: 8px !important; }
+        }
+
+        @media (max-width: 360px) {
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="adminLockScreen">
+    <div class="lock-card">
+        <div class="lock-icon">
+            <i class="fa-solid fa-lock-open"></i>
+        </div>
+        <h2>بوابة الإدارة المركزية مغلقة</h2>
+        <p>يرجى إدخال كلمة مرور اللجنة الإدارية للمجلس للمتابعة:</p>
+        <div class="form-group">
+            <input type="password" id="lockPasswordInput" class="form-control" style="text-align: center; font-size: 1.2rem; letter-spacing: 3px;" placeholder="••••••••" onkeyup="if(event.key === 'Enter') checkAdminLockPassword()">
+        </div>
+        <button id="adminLoginButton" class="btn btn-gold" onclick="checkAdminLockPassword()">تحقق ودخول اللوحة</button>
+        <div id="lockErrorMsg" style="color: red; font-size: 0.85rem; margin-top: 10px; font-weight: bold; display: none;">❌ كلمة المرور غير صحيحة، صلاحية الدخول مرفوضة!</div>
+    </div>
+</div>
+
+<div id="processingModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-spinner"></div>
+        <div id="modalStatusText" style="font-weight: bold; color: var(--admin-purple);">جاري الاتصال بقاعدة البيانات المركزية...</div>
+    </div>
+</div>
+
+<header>
+    <h1>لوحة تحكم الإدارة والتقارير الإغاثية</h1>
+    <p>مجلس عائلة أبو رجيلة الموقر - نظام التحكم المركزي 2026</p>
+</header>
+
+<div class="container">
+    <div id="adminMainContent" class="hidden">
+        
+        <div class="stats-grid">
+            <div class="stat-box color1"><h4>إجمالي العوائل</h4><div class="num" id="stat_families">0</div></div>
+            <div class="stat-box color1"><h4>إجمالي أفراد العائلة</h4><div class="num" id="stat_members">0</div></div>
+            <div class="stat-box color2"><h4>العوائل النازحة</h4><div class="num" id="stat_displaced">0</div></div>
+            <div class="stat-box color2"><h4>الطلاب الجامعيين</h4><div class="num" id="stat_students">0</div></div>
+            <div class="stat-box color3"><h4>الأرامل المسجلات</h4><div class="num" id="stat_widows">0</div></div>
+            <div class="stat-box color4"><h4>المطلقات المسجلات</h4><div class="num" id="stat_divorced">0</div></div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom: 25px; background: #faf0fc; padding: 15px; border-radius: 8px; border: 1px dashed var(--admin-purple);">
+            <div>
+                <p style="font-size:0.85rem; font-weight:bold; color:var(--admin-purple); margin-bottom:5px;">تصدير كشف الآباء المعتمد:</p>
+                <button class="btn btn-gold" onclick="exportToExcel('parents')"><i class="fa-solid fa-file-excel"></i> تصدير كشف الآباء (Excel)</button>
+            </div>
+            <div>
+                <p style="font-size:0.85rem; font-weight:bold; color:var(--admin-purple); margin-bottom:5px;">تصدير كشف الأبناء والتابعين المستقل:</p>
+                <button class="btn btn-gold" style="background-color:#9fa8a3;" onclick="exportToExcel('children')"><i class="fa-solid fa-file-excel"></i> تصدير كشف الأبناء (Excel)</button>
+            </div>
+        </div>
+        <div class="admin-actions">
+            <button class="btn" style="background-color:#2a6f97;" onclick="setupSpreadsheet()"><i class="fa-solid fa-table"></i> إنشاء/تهيئة Google Sheet والبحث السريع</button>
+        </div>
+
+        <div style="background: #edf4f9; padding: 18px; border-radius: 10px; border: 1px solid #b6ccdb; margin-bottom: 25px;">
+            <label style="font-weight: bold; color: var(--edit-blue); display: block; margin-bottom: 5px;"><i class="fa-solid fa-magnifying-glass"></i> الاستعلام السريع عن مواطن وتعديل بياناته بالكامل:</label>
+            <div class="admin-search-row">
+                <input type="text" id="adminSearchInput" class="form-control" inputmode="numeric" pattern="[0-9]*" maxlength="9" autocomplete="off" placeholder="أدخل رقم هوية رب الأسرة المستهدف (9 أرقام)">
+                <button class="btn" style="background-color: var(--edit-blue);" onclick="handleAdminSearch()">استعلام وبحث</button>
+            </div>
+        </div>
+
+        <div id="dynamicDashboardSection" class="hidden" style="background: white; border: 2px solid var(--royal-gold); border-radius: 12px; padding: 20px;">
+            
+            <div style="background: var(--admin-purple); color: white; padding: 8px; text-align: center; font-weight: bold; border-radius: 6px; margin-bottom: 15px;">
+                <i class="fa-solid fa-user-shield"></i> وضع التعديل الإداري نشط الآن على هذا السجل
+            </div>
+
+            <div class="card-title"><i class="fa-solid fa-user-tie"></i> الاسم: <span id="parentNameHeader" style="color: var(--royal-gold);"></span></div>
+            
+            <div class="section-toggle" onclick="toggleDiv('personalSection')"><span>البيانات الشخصية، الزوجة والنزوح</span> <i class="fa-solid fa-chevron-down"></i></div>
+            <div id="personalSection" class="hidden" style="padding: 10px 5px;">
+                <div class="grid-2">
+                    <div class="form-group"><label>تاريخ ميلاد رب الأسرة:</label><input type="date" id="p_birthDate" class="form-control"></div>
+                    <div class="form-group"><label>العمر الحالي:</label><input type="text" id="p_age" class="form-control" readonly></div>
+                </div>
+                <div class="form-group"><label>اسم الزوجة بالكامل:</label><input type="text" id="p_wifeName" class="form-control"></div>
+                <div class="grid-2">
+                    <div class="form-group"><label>رقم هوية الزوجة:</label><input type="text" id="p_wifeId" class="form-control"></div>
+                    <div class="form-group"><label>تاريخ ميلاد الزوجة:</label><input type="date" id="p_wifeBirth" class="form-control"></div>
+                </div>
+                <hr style="margin: 15px 0; border: 0; border-top: 1px dashed #ccc;">
+                <div class="grid-2">
+                    <div class="form-group"><label>مكان النزوح الحالي:</label><input type="text" id="p_displacement" class="form-control"></div>
+                    <div class="form-group"><label>عدد أفراد الأسرة:</label><input type="number" id="p_familyCount" class="form-control"></div>
+                </div>
+                <div class="form-group"><label>الحالة الاجتماعية:</label><input type="text" id="p_status" class="form-control"></div>
+                <button class="btn" style="background-color: var(--edit-blue);" onclick="updatePersonalGroup()">تحديث وحفظ البيانات الشخصية والنزوح</button>
+            </div>
+
+            <div class="section-toggle" onclick="toggleDiv('contactSection')"><span>بيانات الاتصال والطوارئ</span> <i class="fa-solid fa-chevron-down"></i></div>
+            <div id="contactSection" class="hidden" style="padding: 10px 5px;">
+                <div class="grid-2">
+                    <div class="form-group"><label>رقم الجوال الأساسي:</label><input type="text" id="p_phone" class="form-control"></div>
+                    <div class="form-group"><label>رقم جوال بديل:</label><input type="text" id="p_altPhone" class="form-control"></div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label>هاتف 1:</label><input type="text" id="p_tel1" class="form-control"></div>
+                    <div class="form-group"><label>رقم بديل الطوارئ:</label><input type="text" id="p_emergency" class="form-control"></div>
+                </div>
+                <button class="btn" style="background-color: var(--edit-blue);" onclick="updateContactGroup()">حفظ وتحديث الاتصالات</button>
+            </div>
+
+            <div class="section-toggle" onclick="toggleDiv('bankSection')"><span>البيانات البنكية للدعم والمعاملات</span> <i class="fa-solid fa-chevron-down"></i></div>
+            <div id="bankSection" class="hidden" style="padding: 10px 5px;">
+                <div class="form-group">
+                    <label>اسم البنك أو المحفظة المالية:</label>
+                    <select id="p_bank" class="form-control">
+                        <option value="">-- اختر البنك أو المحفظة --</option>
+                        <option value="بنك فلسطين">بنك فلسطين</option>
+                        <option value="بنك القدس">بنك القدس</option>
+                        <option value="البنك الإسلامي الفلسطيني">البنك الإسلامي الفلسطيني</option>
+                        <option value="البنك الإسلامي العربي">البنك الإسلامي العربي</option>
+                        <option value="محفظة جوال باي">محفظة جوال باي</option>
+                        <option value="محفظة بال باي">محفظة بال باي</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>رقم الحساب أو رقم المحفظة:</label><input type="text" id="p_bankAccount" class="form-control"></div>
+                <div class="form-group"><label>اسم صاحب الحساب بالكامل:</label><input type="text" id="p_bankOwner" class="form-control"></div>
+                <button class="btn" style="background-color: var(--edit-blue);" onclick="updateBankGroup()">حفظ وتحديث البيانات البنكية</button>
+            </div>
+
+            <h3 style="font-size: 1.1rem; margin-top:20px; margin-bottom: 10px; color: var(--admin-purple);">الأبناء التابعين لهذا السجل:</h3>
+            <div id="childrenListContainer"></div>
+
+            <div id="editChildWrapper" class="hidden" style="background: #edf4f9; padding: 20px; border-radius: 10px; border: 2px solid var(--edit-blue); margin: 20px 0;">
+                <h4 style="color: var(--edit-blue); margin-bottom: 15px;"><i class="fa-solid fa-user-pen"></i> تعديل بيانات الابن: <span id="editingChildName"></span></h4>
+                <input type="hidden" id="edit_oldChildId">
+                <div class="grid-2">
+                    <div class="form-group"><label>اسم الابن بالكامل:</label><input type="text" id="edit_c_name" class="form-control"></div>
+                    <div class="form-group"><label>رقم هوية الابن (9 أرقام):</label><input type="text" id="edit_c_id" class="form-control" inputmode="numeric" pattern="[0-9]*" maxlength="9" autocomplete="off"></div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label>تاريخ الميلاد:</label><input type="date" id="edit_c_birth" class="form-control"></div>
+                    <div class="form-group"><label>الجنس:</label>
+                        <select id="edit_c_gender" class="form-control">
+                            <option value="ذكر">ذكر</option>
+                            <option value="أنثى">أنثى</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label>التخصص الجامعي:</label><input type="text" id="edit_c_major" class="form-control"></div>
+                    <div class="form-group"><label>الجامعة:</label><input type="text" id="edit_c_uni" class="form-control"></div>
+                </div>
+                <div class="form-group"><label>السنة الدراسية الحالية:</label><input type="text" id="edit_c_year" class="form-control"></div>
+                <div class="grid-2">
+                    <button class="btn btn-blue" onclick="submitChildUpdate()">تحديث وحفظ بيانات الابن</button>
+                    <button class="btn" style="background:#888; margin-top:10px;" onclick="document.getElementById('editChildWrapper').classList.add('hidden')">إلغاء</button>
+                </div>
+            </div>
+
+            <div class="section-toggle" style="background-color: #e2ede8; border-color:#bcd3c7; color:#2c3e35; margin-top:15px;" onclick="toggleDiv('addChildForm')"><span><i class="fa-solid fa-plus"></i> إضافة ابن جديد لهذا السجل</span> <i class="fa-solid fa-chevron-down"></i></div>
+            <div id="addChildForm" class="hidden" style="padding: 10px 5px;">
+                <div class="grid-2">
+                    <div class="form-group"><label>اسم الابن بالكامل:</label><input type="text" id="c_name" class="form-control"></div>
+                    <div class="form-group"><label>رقم هوية الابن:</label><input type="text" id="c_id" class="form-control" inputmode="numeric" pattern="[0-9]*" maxlength="9" autocomplete="off"></div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label>تاريخ الميلاد:</label><input type="date" id="c_birth" class="form-control"></div>
+                    <div class="form-group"><label>الجنس:</label>
+                        <select id="c_gender" class="form-control">
+                            <option value="ذكر">ذكر</option>
+                            <option value="أنثى">أنثى</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label>التخصص الجامعي:</label><input type="text" id="c_major" class="form-control"></div>
+                    <div class="form-group"><label>الجامعة:</label><input type="text" id="c_uni" class="form-control"></div>
+                </div>
+                <div class="form-group"><label>السنة الدراسية الحالية:</label><input type="text" id="c_year" class="form-control"></div>
+                <button class="btn btn-gold" style="background-color:#c5a059;" onclick="submitNewChild()">تثبيت وإدراج الابن في كشوفات العائلة</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // ⚠️ اكتب رابط تطبيق الويب الخاص بك (Web App URL) المأخوذ من Google Apps Script هنا ⚠️
+    const APP_VERSION = "2026.08.21.1";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwDb1SZSxen9pRPNwWu0Ac8CXqIAhot5_eJ2FBf1MtI6fHCK-ysEMaJkpoPO1AypdqQ/exec"; 
+    
+    let ADMIN_TOKEN = "";
+    let CURRENT_USER_ID = "";
+    let ALL_CHILDREN_DATA = [];
+    let RAW_PARENTS_EXCEL = [];
+    let RAW_CHILDREN_EXCEL = [];
+    let IS_REQUEST_RUNNING = false;
+
+    function postApi(payload) {
+        const requestPayload = Object.assign({ clientVersion: APP_VERSION }, payload);
+        const adminActions = ["getAdminStats", "adminSearch", "exportData", "updateParent", "addChild", "updateChild", "prepareSheetsForSpeed", "setupSpreadsheet"];
+        const apiUrl = `${SCRIPT_URL}?v=${encodeURIComponent(APP_VERSION)}&t=${Date.now()}`;
+
+        if (ADMIN_TOKEN && adminActions.includes(requestPayload.action) && !requestPayload.adminToken) {
+            requestPayload.adminToken = ADMIN_TOKEN;
+        }
+
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", apiUrl, true);
+            xhr.timeout = 30000;
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) return;
+
+                try {
+                    if (xhr.status && (xhr.status < 200 || xhr.status >= 300)) {
+                        throw new Error("تعذر الاتصال بالخادم. حاول مرة أخرى بعد قليل.");
+                    }
+
+                    const response = JSON.parse(xhr.responseText || "{}");
+                    if (response.status !== "success") {
+                        throw new Error(response.message || "تعذر تنفيذ الطلب.");
+                    }
+
+                    resolve(response);
+                } catch (error) {
+                    reject(error);
+                }
+            };
+
+            xhr.onerror = function () {
+                reject(new Error("فشل الاتصال بالخادم. تأكد من رابط النشر والإنترنت."));
+            };
+
+            xhr.ontimeout = function () {
+                reject(new Error("انتهت مهلة الاتصال بالخادم. حاول مرة أخرى."));
+            };
+
+            xhr.send(JSON.stringify(requestPayload));
+        });
+    }
+
+    function setRequestRunning(isRunning) {
+        IS_REQUEST_RUNNING = isRunning;
+        document.querySelectorAll('#adminMainContent button').forEach((button) => {
+            button.disabled = isRunning;
+        });
+    }
+
+    function registerUpdateGuard() {
+        try {
+            const storedVersion = localStorage.getItem('family_admin_site_version');
+            if (storedVersion && storedVersion !== APP_VERSION && !location.search.includes(`v=${APP_VERSION}`)) {
+                localStorage.setItem('family_admin_site_version', APP_VERSION);
+                location.replace(`${location.pathname}?v=${encodeURIComponent(APP_VERSION)}`);
+                return;
+            }
+
+            localStorage.setItem('family_admin_site_version', APP_VERSION);
+
+            if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+                navigator.serviceWorker.register(`sw.js?v=${encodeURIComponent(APP_VERSION)}`, { updateViaCache: 'none' })
+                    .then((registration) => {
+                        registration.update();
+                        if (registration.waiting) {
+                            registration.waiting.postMessage({ type: "SKIP_WAITING" });
+                        }
+                    })
+                    .catch(() => {});
+            }
+        } catch (error) {}
+    }
+
+    function normalizeIdInput(value) {
+        return String(value || "").replace(/\D/g, "").slice(0, 9);
+    }
+
+    function isValidId(value) {
+        return /^\d{9}$/.test(normalizeIdInput(value));
+    }
+
+    function bindNumericInput(id) {
+        const input = document.getElementById(id);
+        if (!input) return;
+
+        input.addEventListener('input', () => {
+            input.value = normalizeIdInput(input.value);
+        });
+    }
+
+    function escapeHtml(value) {
+        return String(value === null || value === undefined ? "" : value).replace(/[&<>"']/g, (char) => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        }[char]));
+    }
+
+    function makeChildRecord(childData) {
+        return {
+            'اسم الابن': childData.name,
+            'رقم هوية الابن': childData.id,
+            'تاريخ الميلاد': childData.birthDate,
+            'الجنس': childData.gender,
+            'التخصص الجامعي': childData.major || "",
+            'الجامعة': childData.university || "",
+            'السنة الدراسية الحالية': childData.year || ""
+        };
+    }
+
+    async function checkAdminLockPassword() {
+        const passInput = document.getElementById('lockPasswordInput');
+        const button = document.getElementById('adminLoginButton');
+        const errorMsg = document.getElementById('lockErrorMsg');
+        const oldButtonText = button.textContent;
+        const password = passInput.value;
+
+        errorMsg.style.display = 'none';
+
+        if (!password) {
+            errorMsg.textContent = "يرجى إدخال كلمة المرور.";
+            errorMsg.style.display = 'block';
+            passInput.focus();
+            return;
+        }
+
+        button.disabled = true;
+        button.textContent = "جاري التحقق...";
+
+        try {
+            const response = await postApi({ action: "adminLogin", password: password });
+            ADMIN_TOKEN = response.token;
+            passInput.value = "";
+
+            const lockScreen = document.getElementById('adminLockScreen');
+            lockScreen.style.opacity = '0';
+            setTimeout(() => {
+                lockScreen.classList.add('hidden');
+                document.getElementById('adminMainContent').classList.remove('hidden');
+                fetchAdminStats();
+            }, 400);
+        } catch(error) {
+            errorMsg.textContent = error.message || "كلمة المرور غير صحيحة، صلاحية الدخول مرفوضة!";
+            errorMsg.style.display = 'block';
+            passInput.value = '';
+            passInput.focus();
+        } finally {
+            button.disabled = false;
+            button.textContent = oldButtonText;
+        }
+    }
+
+    function toggleDiv(id) {
+        const element = document.getElementById(id);
+        if (element) element.classList.toggle('hidden');
+    }
+
+    function showProcessingModal(show, text = "جاري معالجة طلبك الآن...") {
+        const modal = document.getElementById('processingModal');
+        const textElement = document.getElementById('modalStatusText');
+        if (show) { textElement.textContent = text; modal.classList.add('active'); } 
+        else { modal.classList.remove('active'); }
+    }
+
+    async function fetchAdminStats(silent = false) {
+        if (!ADMIN_TOKEN) return;
+        if (IS_REQUEST_RUNNING && !silent) return;
+        if (!silent) setRequestRunning(true);
+        if (!silent) showProcessingModal(true, "جاري احتساب وإعداد الإحصائيات والتقارير الإغاثية في الخلفية...");
+
+        try {
+            const response = await postApi({ action: "getAdminStats" });
+            document.getElementById('stat_families').textContent = response.stats.totalFamilies;
+            document.getElementById('stat_members').textContent = response.stats.totalMembers;
+            document.getElementById('stat_displaced').textContent = response.stats.totalDisplaced;
+            document.getElementById('stat_students').textContent = response.stats.totalUniStudents;
+            document.getElementById('stat_widows').textContent = response.stats.totalWidows;
+            document.getElementById('stat_divorced').textContent = response.stats.totalDivorced;
+
+            if (response.rawParents) RAW_PARENTS_EXCEL = response.rawParents;
+            if (response.rawChildren) RAW_CHILDREN_EXCEL = response.rawChildren;
+        } catch(error) {
+            if (!silent) alert(error.message || "خطأ في قراءة رد إحصائيات الخادم.");
+        } finally {
+            if (!silent) showProcessingModal(false);
+            if (!silent) setRequestRunning(false);
+        }
+    }
+
+    async function handleAdminSearch() {
+        const id = normalizeIdInput(document.getElementById('adminSearchInput').value);
+        document.getElementById('adminSearchInput').value = id;
+
+        if(!isValidId(id)) { alert("أدخل رقم هوية صحيح مكون من 9 أرقام."); return; }
+        
+        if (IS_REQUEST_RUNNING) return;
+        setRequestRunning(true);
+        showProcessingModal(true, "جاري الاستعلام المركزي الفوري عن السجل المطلوب وبناء لوحته التفاعلية...");
+
+        try {
+            const response = await postApi({ action: "adminSearch", searchId: id });
+            setupDashboard(response, id);
+        } catch(error) {
+            alert(error.message || "تعذر العثور على السجل المطلوب.");
+        } finally {
+            showProcessingModal(false);
+            setRequestRunning(false);
+        }
+    }
+
+    function setupDashboard(data, id) {
+        CURRENT_USER_ID = id;
+        ALL_CHILDREN_DATA = data.children || [];
+        document.getElementById('dynamicDashboardSection').classList.remove('hidden');
+        document.getElementById('editChildWrapper').classList.add('hidden');
+        
+        const parent = data.parent || {};
+        document.getElementById('parentNameHeader').textContent = parent['الاسم الكامل'] || "";
+        document.getElementById('p_birthDate').value = formatDateDisplay(parent['تاريخ الميلاد']);
+        document.getElementById('p_age').value = parent['العمر'] || calculateAge(parent['تاريخ الميلاد']);
+        document.getElementById('p_status').value = parent['الحالة الاجتماعية'] || "";
+        document.getElementById('p_displacement').value = parent['مكان النزوح الحالي'] || "";
+        document.getElementById('p_familyCount').value = parent['عدد أفراد الأسرة'] || "";
+        document.getElementById('p_wifeName').value = parent['اسم الزوجة'] || "";
+        document.getElementById('p_wifeId').value = parent['رقم هوية الزوجة'] || "";
+        document.getElementById('p_wifeBirth').value = formatDateDisplay(parent['تاريخ ميلاد الزوجة']);
+        document.getElementById('p_phone').value = parent['رقم الجوال'] || "";
+        document.getElementById('p_altPhone').value = parent['رقم جوال بديل'] || "";
+        document.getElementById('p_tel1').value = parent['رقم الهاتف'] || "";
+        document.getElementById('p_emergency').value = parent['رقم جوال بديل'] || "";
+        document.getElementById('p_bank').value = parent['البنك'] || "";
+        document.getElementById('p_bankAccount').value = parent['رقم الحساب البنكي'] || "";
+        document.getElementById('p_bankOwner').value = parent['اسم صاحب الحساب'] || "";
+
+        renderChildrenList();
+    }
+
+    function renderChildrenList() {
+        const container = document.getElementById('childrenListContainer');
+        container.innerHTML = "";
+        
+        if(ALL_CHILDREN_DATA.length === 0) {
+            container.innerHTML = "<p style='color:gray; padding:10px;'>لا يوجد أبناء مسجلين حالياً لهذا السجل العائلي.</p>";
+        } else {
+            let htmlContent = "";
+            ALL_CHILDREN_DATA.forEach((child, index) => {
+                const childBirth = child['تاريخ الميلاد'];
+                const childName = escapeHtml(child['اسم الابن'] || "");
+                const childGender = escapeHtml(child['الجنس'] || "");
+                const childId = escapeHtml(child['رقم هوية الابن'] || "");
+                const childBirthText = escapeHtml(formatDateDisplay(childBirth));
+                const childAge = escapeHtml(calculateAge(childBirth));
+
+                htmlContent += `
+                    <div class="child-row">
+                        <div>
+                            <strong>${childName}</strong> <span style="font-size:0.85rem; color:#666;">(${childGender})</span>
+                            <div class="child-info-meta">
+                                <span>هوية: ${childId}</span>
+                                <span>الميلاد: ${childBirthText}</span>
+                                <span style="color:var(--admin-purple); font-weight:bold;">العمر: ${childAge}</span>
+                            </div>
+                        </div>
+                        <button class="btn-edit-child" onclick="populateChildEditForm(${index})"><i class="fa-solid fa-user-gear"></i> تعديل</button>
+                    </div>`;
+            });
+            container.innerHTML = htmlContent;
+        }
+    }
+
+    async function exportToExcel(type) {
+        if (IS_REQUEST_RUNNING) return;
+        let data = type === 'parents' ? RAW_PARENTS_EXCEL : RAW_CHILDREN_EXCEL;
+
+        if(data.length === 0) {
+            setRequestRunning(true);
+            showProcessingModal(true, "جاري تجهيز ملف التصدير من قاعدة البيانات...");
+
+            try {
+                const response = await postApi({ action: "exportData", type: type });
+                data = response.data || [];
+
+                if (type === 'parents') RAW_PARENTS_EXCEL = data;
+                else RAW_CHILDREN_EXCEL = data;
+            } catch(error) {
+                alert(error.message || "تعذر تجهيز ملف التصدير.");
+                showProcessingModal(false);
+                setRequestRunning(false);
+                return;
+            }
+
+            showProcessingModal(false);
+            setRequestRunning(false);
+        }
+
+        if(data.length === 0) { alert("لا توجد بيانات للتصدير."); return; }
+        downloadCsv(data, type);
+    }
+
+    async function setupSpreadsheet() {
+        if (IS_REQUEST_RUNNING) return;
+
+        setRequestRunning(true);
+        showProcessingModal(true, "جاري إنشاء/تهيئة Google Sheet وتجهيز البحث السريع...");
+
+        try {
+            const response = await postApi({ action: "setupSpreadsheet" });
+            const sheetUrl = response.spreadsheetUrl ? "\n" + response.spreadsheetUrl : "";
+            alert("تم إنشاء/تهيئة Google Sheet والبحث السريع بنجاح." + sheetUrl);
+            await fetchAdminStats(true);
+        } catch(error) {
+            alert(error.message || "تعذر إنشاء/تهيئة Google Sheet.");
+        } finally {
+            showProcessingModal(false);
+            setRequestRunning(false);
+        }
+    }
+
+    async function prepareSheetsForSpeed() {
+        return setupSpreadsheet();
+    }
+
+    function downloadCsv(data, type) {
+        let csvContent = "\ufeff"; 
+        data.forEach(function(rowArray) {
+            let row = rowArray.map(sanitizeCsvCell);
+            csvContent += row.join(",") + "\r\n";
+        });
+
+        let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        let link = document.createElement("a");
+        const objectUrl = URL.createObjectURL(blob);
+        link.setAttribute("href", objectUrl);
+        link.setAttribute("download", `كشف_مجلس_العائلة_${type === 'parents' ? 'الآباء' : 'الأبناء'}_2026.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(objectUrl);
+    }
+
+    function sanitizeCsvCell(value) {
+        const text = String(value === null || value === undefined ? "" : value);
+        const safeText = /^[=+\-@]/.test(text.trim()) ? "'" + text : text;
+        return `"${safeText.replace(/"/g, '""')}"`;
+    }
+
+    function calculateAge(birthDateString) {
+        const cleanDate = formatDateDisplay(birthDateString);
+        if(!cleanDate) return "غير معروف";
+        const parts = cleanDate.split('-');
+        if(parts.length !== 3) return birthDateString;
+        const birthDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        if (isNaN(birthDate.getTime())) return birthDateString;
+
+        const today = new Date();
+        let years = today.getFullYear() - birthDate.getFullYear();
+        let months = today.getMonth() - birthDate.getMonth();
+        if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) { years--; months += 12; }
+        return years === 0 ? `${months} شهر` : `${years} سنة`;
+    }
+
+    function formatDateDisplay(dateString) {
+        if(!dateString) return "";
+        const value = String(dateString).trim();
+        if(value.includes("T")) return value.split('T')[0];
+        if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+
+        const slashDate = value.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
+        if (slashDate) {
+            const day = slashDate[1].padStart(2, '0');
+            const month = slashDate[2].padStart(2, '0');
+            return `${slashDate[3]}-${month}-${day}`;
+        }
+
+        return value;
+    }
+
+    function populateChildEditForm(index) {
+        const child = ALL_CHILDREN_DATA[index];
+        document.getElementById('editingChildName').textContent = child['اسم الابن'];
+        document.getElementById('edit_oldChildId').value = child['رقم هوية الابن'];
+        document.getElementById('edit_c_name').value = child['اسم الابن'];
+        document.getElementById('edit_c_id').value = child['رقم هوية الابن'];
+        document.getElementById('edit_c_birth').value = formatDateDisplay(child['تاريخ الميلاد']);
+        document.getElementById('edit_c_gender').value = child['الجنس'] || "ذكر";
+        document.getElementById('edit_c_major').value = child['التخصص الجامعي'] || "";
+        document.getElementById('edit_c_uni').value = child['الجامعة'] || "";
+        document.getElementById('edit_c_year').value = child['السنة الدراسية الحالية'] || "";
+        
+        const wrapper = document.getElementById('editChildWrapper');
+        wrapper.classList.remove('hidden');
+        wrapper.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function submitChildUpdate() {
+        const oldId = normalizeIdInput(document.getElementById('edit_oldChildId').value);
+        const name = document.getElementById('edit_c_name').value.trim();
+        const id = normalizeIdInput(document.getElementById('edit_c_id').value);
+        const birth = document.getElementById('edit_c_birth').value;
+        const gender = document.getElementById('edit_c_gender').value;
+        const major = document.getElementById('edit_c_major').value.trim();
+        const uni = document.getElementById('edit_c_uni').value.trim();
+        const year = document.getElementById('edit_c_year').value.trim();
+        document.getElementById('edit_c_id').value = id;
+
+        if (!name || !isValidId(id) || !birth) { alert("يرجى ملء الحقول الأساسية أولاً!"); return; }
+
+        if (IS_REQUEST_RUNNING) return;
+        setRequestRunning(true);
+        showProcessingModal(true, "جاري تحديث بيانات الابن بصفة فورية مجمعة...");
+        const childData = { name: name, id: id, birthDate: birth, gender: gender, major: major, university: uni, year: year };
+
+        try {
+            const response = await postApi({ action: "updateChild", parentId: CURRENT_USER_ID, oldChildId: oldId, childData: childData });
+            const updatedChild = response.child || makeChildRecord(childData);
+            const existingIndex = ALL_CHILDREN_DATA.findIndex(child => normalizeIdInput(child['رقم هوية الابن']) === oldId);
+
+            if (existingIndex !== -1) {
+                ALL_CHILDREN_DATA[existingIndex] = updatedChild;
+            } else {
+                ALL_CHILDREN_DATA.push(updatedChild);
+            }
+
+            renderChildrenList();
+            document.getElementById('editChildWrapper').classList.add('hidden');
+            fetchAdminStats(true);
+            alert("تم تحديث بيانات الابن بنجاح!");
+        } catch(error) {
+            alert(error.message || "حدث خطأ أثناء تحديث بيانات الابن.");
+        } finally {
+            showProcessingModal(false);
+            setRequestRunning(false);
+        }
+    }
+
+    async function sendUpdate(fields, modalText) {
+        if (IS_REQUEST_RUNNING) return;
+        setRequestRunning(true);
+        showProcessingModal(true, modalText);
+
+        try {
+            await postApi({ action: "updateParent", nationalId: CURRENT_USER_ID, fields: fields });
+            document.getElementById('p_age').value = calculateAge(document.getElementById('p_birthDate').value);
+            fetchAdminStats(true);
+            alert("تم حفظ وتحديث السجل في السيرفر المركزي بنجاح!");
+        } catch(error) {
+            alert(error.message || "حدث خطأ أثناء حفظ السجل.");
+        } finally {
+            showProcessingModal(false);
+            setRequestRunning(false);
+        }
+    }
+
+    function updatePersonalGroup() {
+        const fields = {};
+        fields['تاريخ الميلاد'] = document.getElementById('p_birthDate').value; 
+        fields['مكان النزوح الحالي'] = document.getElementById('p_displacement').value;
+        fields['عدد أفراد الأسرة'] = document.getElementById('p_familyCount').value;
+        fields['تاريخ ميلاد الزوجة'] = document.getElementById('p_wifeBirth').value;
+        fields['اسم الزوجة'] = document.getElementById('p_wifeName').value;
+        fields['رقم هوية الزوجة'] = document.getElementById('p_wifeId').value;
+        fields['الحالة الاجتماعية'] = document.getElementById('p_status').value;
+        sendUpdate(fields, "جاري مزامنة وتثبيت بيانات السجل العائلي الشاملة...");
+    }
+
+    function updateContactGroup() {
+        const fields = {};
+        fields['رقم الجوال'] = document.getElementById('p_phone').value;
+        fields['رقم جوال بديل'] = document.getElementById('p_altPhone').value;
+        fields['رقم الهاتف'] = document.getElementById('p_tel1').value;
+        sendUpdate(fields, "جاري تحديث سجل الهواتف والاتصال للأسرة...");
+    }
+
+    function updateBankGroup() {
+        const fields = {};
+        fields['البنك'] = document.getElementById('p_bank').value;
+        fields['رقم الحساب البنكي'] = document.getElementById('p_bankAccount').value;
+        fields['اسم صاحب الحساب'] = document.getElementById('p_bankOwner').value;
+        sendUpdate(fields, "جاري تحديث وتعيين الحساب المالي المركزي للأسرة...");
+    }
+
+    async function submitNewChild() {
+        const name = document.getElementById('c_name').value.trim();
+        const id = normalizeIdInput(document.getElementById('c_id').value);
+        const birth = document.getElementById('c_birth').value;
+        const gender = document.getElementById('c_gender').value;
+        const major = document.getElementById('c_major').value.trim();
+        const uni = document.getElementById('c_uni').value.trim();
+        const year = document.getElementById('c_year').value.trim();
+        document.getElementById('c_id').value = id;
+
+        if(!name || !isValidId(id) || !birth) { alert("أدخل اسم، هوية 9 أرقام، وتاريخ ميلاد للابن!"); return; }
+
+        if (IS_REQUEST_RUNNING) return;
+        setRequestRunning(true);
+        showProcessingModal(true, "جاري فحص وإدراج الابن الجديد كلياً في قاعدة البيانات الكبرى...");
+        const childData = { name: name, id: id, birthDate: birth, gender: gender, major: major, university: uni, year: year };
+
+        try {
+            const response = await postApi({ action: "addChild", parentId: CURRENT_USER_ID, childData: childData });
+            ALL_CHILDREN_DATA.push(response.child || makeChildRecord(childData));
+            renderChildrenList();
+
+            document.getElementById('c_name').value = "";
+            document.getElementById('c_id').value = "";
+            document.getElementById('c_birth').value = "";
+            document.getElementById('c_major').value = "";
+            document.getElementById('c_uni').value = "";
+            document.getElementById('c_year').value = "";
+            document.getElementById('addChildForm').classList.add('hidden');
+
+            RAW_CHILDREN_EXCEL = [];
+            fetchAdminStats(true);
+            alert("تم إدراج التابع بنجاح في سجلات العائلة!");
+        } catch(error) {
+            alert(error.message || "حدث خطأ أثناء إدراج الابن.");
+        } finally {
+            showProcessingModal(false);
+            setRequestRunning(false);
+        }
+    }
+
+    registerUpdateGuard();
+    bindNumericInput('adminSearchInput');
+    bindNumericInput('edit_c_id');
+    bindNumericInput('c_id');
+</script>
+</body>
+</html>

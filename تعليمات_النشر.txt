@@ -1,0 +1,33 @@
+طريقة النشر على Hostinger:
+
+1. ادخل إلى Hostinger ثم File Manager.
+2. افتح مجلد public_html الخاص بالدومين rj006.com.
+3. ارفع كل محتويات مجلد "موقع العيلة" إلى public_html، وليس ملفات HTML فقط.
+4. الصفحة الرئيسية هي:
+   https://rj006.com/
+5. صفحة الإدارة الجديدة هي:
+   https://rj006.com/adminhamada
+   أو:
+   https://rj006.com/adminhamada.html
+6. لا تعتمد على اسم الإدارة القديم index (2).html.
+7. تأكد أن هذه الملفات مرفوعة مع الصفحات:
+   .htaccess
+   _headers
+   sw.js
+   vercel.json
+   manifest.webmanifest
+   offline.html
+   pwa-icon-192.png
+   pwa-icon-512.png
+   pwa-maskable-512.png
+8. بعد أي تعديل جديد، غير قيمة APP_VERSION داخل صفحات HTML وداخل sw.js.
+9. أول مرة بعد رفع هذه النسخة افتح الرابط بهذا الشكل لكسر الكاش القديم:
+   https://rj006.com/?v=2026.08.21.1
+   https://rj006.com/adminhamada?v=2026.08.21.1
+10. Hostinger يعمل غالباً على Apache، لذلك ملف .htaccess هو الأهم لمنع تخزين النسخة القديمة.
+11. في Google Apps Script يجب عمل Deploy جديد بعد تعديل Code.gs، حفظ الكود وحده لا يكفي.
+12. Google Sheet يتم إنشاؤه تلقائياً إذا لم يكن موجوداً عند أول طلب للخادم بعد نشر Code.gs.
+13. من صفحة الإدارة يمكن الضغط على "إنشاء/تهيئة Google Sheet والبحث السريع" للتأكد من إنشاء الشيت وتجهيز أعمدة الهوية.
+14. الموقع أصبح PWA، ويمكن تثبيته من زر "تثبيت التطبيق" على Android أو من خيار "إضافة إلى الشاشة الرئيسية" في Safari على iPhone.
+15. الرابط الذي يرسل للمستخدمين بعد هذا التحديث:
+   https://rj006.com/?v=2026.08.21.1
